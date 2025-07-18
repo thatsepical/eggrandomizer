@@ -88,42 +88,42 @@ local gui = Instance.new("ScreenGui", localPlayer:WaitForChild("PlayerGui"))
 gui.Name = "PetPredictorUI"
 gui.ResetOnSpawn = false
 
-local frame = Instance.new("Frame", gui)
-frame.Size = UDim2.new(0, 180, 0, 120)
-frame.Position = UDim2.new(0.5, -90, 0.3, 0)
-frame.BackgroundTransparency = 1
-frame.BorderSizePixel = 0
-frame.Active = true
-frame.Draggable = true
+local mainContainer = Instance.new("Frame", gui)
+mainContainer.Size = UDim2.new(0, 180, 0, 120)
+mainContainer.Position = UDim2.new(0.5, -90, 0.3, 0)
+mainContainer.BackgroundColor3 = Color3.fromRGB(54, 57, 63)
+mainContainer.BorderSizePixel = 0
+mainContainer.Active = true
+mainContainer.Draggable = true
+Instance.new("UICorner", mainContainer).CornerRadius = UDim.new(0, 8)
 
-local outerFrame = Instance.new("Frame", frame)
-outerFrame.Size = UDim2.new(1, 0, 1, 0)
-outerFrame.BackgroundColor3 = Color3.fromRGB(54, 57, 63)
-outerFrame.BorderSizePixel = 0
-Instance.new("UICorner", outerFrame).CornerRadius = UDim.new(0, 8)
+local contentFrame = Instance.new("Frame", mainContainer)
+contentFrame.Size = UDim2.new(1, 0, 1, 0)
+contentFrame.BackgroundTransparency = 1
+contentFrame.BorderSizePixel = 0
 
-local topSection = Instance.new("Frame", frame)
+local topSection = Instance.new("Frame", contentFrame)
 topSection.Size = UDim2.new(1, 0, 0, 40)
 topSection.Position = UDim2.new(0, 0, 0, 0)
 topSection.BackgroundColor3 = Color3.fromRGB(54, 57, 63)
 topSection.BorderSizePixel = 0
 topSection.ZIndex = 0
 
-local bottomSection = Instance.new("Frame", frame)
+local bottomSection = Instance.new("Frame", contentFrame)
 bottomSection.Size = UDim2.new(1, 0, 1, -40)
 bottomSection.Position = UDim2.new(0, 0, 0, 40)
 bottomSection.BackgroundColor3 = Color3.fromRGB(33, 34, 38)
 bottomSection.BorderSizePixel = 0
 bottomSection.ZIndex = 0
 
-local divider = Instance.new("Frame", frame)
+local divider = Instance.new("Frame", contentFrame)
 divider.Size = UDim2.new(1, 0, 0, 1)
 divider.Position = UDim2.new(0, 0, 0, 40)
 divider.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
 divider.BorderSizePixel = 0
 divider.ZIndex = 1
 
-local title = Instance.new("TextLabel", frame)
+local title = Instance.new("TextLabel", contentFrame)
 title.Size = UDim2.new(1, -10, 0, 20)
 title.Position = UDim2.new(0, 5, 0, 5)
 title.BackgroundTransparency = 1
@@ -134,7 +134,7 @@ title.TextSize = 16
 title.TextXAlignment = Enum.TextXAlignment.Center
 title.ZIndex = 2
 
-local credits = Instance.new("TextLabel", frame)
+local credits = Instance.new("TextLabel", contentFrame)
 credits.Size = UDim2.new(1, -10, 0, 15)
 credits.Position = UDim2.new(0, 5, 0, 23)
 credits.BackgroundTransparency = 1
@@ -145,7 +145,7 @@ credits.TextColor3 = Color3.fromRGB(170, 170, 170)
 credits.TextXAlignment = Enum.TextXAlignment.Center
 credits.ZIndex = 2
 
-local close = Instance.new("TextButton", frame)
+local close = Instance.new("TextButton", contentFrame)
 close.Size = UDim2.new(0, 20, 0, 20)
 close.Position = UDim2.new(1, -25, 0, 5)
 close.Text = "X"
@@ -155,7 +155,7 @@ close.Font = Enum.Font.SourceSansBold
 close.TextSize = 14
 close.ZIndex = 2
 
-local predict = Instance.new("TextButton", frame)
+local predict = Instance.new("TextButton", contentFrame)
 predict.Size = UDim2.new(0, 140, 0, 30)
 predict.Position = UDim2.new(0.5, -70, 0, 50)
 predict.BackgroundColor3 = Color3.fromRGB(196, 74, 74)
@@ -166,7 +166,7 @@ predict.Text = "PREDICT PETS"
 predict.ZIndex = 2
 Instance.new("UICorner", predict).CornerRadius = UDim.new(0, 6)
 
-local loadingBarBg = Instance.new("Frame", frame)
+local loadingBarBg = Instance.new("Frame", contentFrame)
 loadingBarBg.Size = UDim2.new(0, 140, 0, 20)
 loadingBarBg.Position = UDim2.new(0.5, -70, 0, 50)
 loadingBarBg.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
@@ -189,7 +189,7 @@ loadingPercent.Font = Enum.Font.SourceSansBold
 loadingPercent.TextSize = 12
 loadingPercent.ZIndex = 4
 
-local loadingText = Instance.new("TextLabel", frame)
+local loadingText = Instance.new("TextLabel", contentFrame)
 loadingText.Size = UDim2.new(1, -10, 0, 15)
 loadingText.Position = UDim2.new(0, 5, 0, 75)
 loadingText.BackgroundTransparency = 1
@@ -272,11 +272,11 @@ Instance.new("UICorner", showBtn).CornerRadius = UDim.new(0, 6)
 showBtn.Visible = false
 
 close.MouseButton1Click:Connect(function()
-    frame.Visible = false
+    mainContainer.Visible = false
     showBtn.Visible = true
 end)
 
 showBtn.MouseButton1Click:Connect(function()
-    frame.Visible = true
+    mainContainer.Visible = true
     showBtn.Visible = false
 end)
