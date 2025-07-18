@@ -1,9 +1,7 @@
--- SERVICES
 local players = game:GetService("Players")
 local collectionService = game:GetService("CollectionService")
 local localPlayer = players.LocalPlayer or players:GetPlayers()[1]
 
--- DATA
 local eggChances = {
     ["Common Egg"] = {["Dog"] = 33, ["Bunny"] = 33, ["Golden Lab"] = 33},
     ["Uncommon Egg"] = {["Black Bunny"] = 25, ["Chicken"] = 25, ["Cat"] = 25, ["Deer"] = 25},
@@ -22,7 +20,6 @@ local eggChances = {
 
 local displayedEggs = {}
 
--- FUNCTION: Get a valid pet (not 0%)
 local function getPetForEgg(eggName)
     local pets = eggChances[eggName]
     if not pets then return "?" end
@@ -33,7 +30,6 @@ local function getPetForEgg(eggName)
     return #valid > 0 and valid[math.random(1, #valid)] or "?"
 end
 
--- FUNCTION: Create ESP GUI
 local function createEspGui(object, labelText)
     local billboard = Instance.new("BillboardGui")
     billboard.Name = "PetESP"
@@ -43,18 +39,18 @@ local function createEspGui(object, labelText)
     local adornee = object:FindFirstChildWhichIsA("BasePart") or object.PrimaryPart
     if not adornee then return nil end
     billboard.Adornee = adornee
-    local label = Instance.new("TextLabel", billboard)
+    local label = Instance.new("TextLabel")
     label.Size = UDim2.new(1, 0, 1, 0)
     label.BackgroundTransparency = 1
     label.TextColor3 = Color3.new(1, 1, 1)
     label.TextScaled = true
     label.Font = Enum.Font.GothamBold
     label.Text = labelText
+    label.Parent = billboard
     billboard.Parent = game:GetService("CoreGui")
-    return billboard
+    return billboard, label
 end
 
--- FUNCTION: Add ESP
 local function addESP(egg)
     if egg:GetAttribute("OWNER") ~= localPlayer.Name then return end
     local eggName = egg:GetAttribute("EggName")
@@ -62,38 +58,36 @@ local function addESP(egg)
     if not eggName or not objectId or displayedEggs[objectId] then return end
     local pet = getPetForEgg(eggName)
     local labelText = eggName .. " | " .. pet
-    local espGui = createEspGui(egg, labelText)
+    local espGui, espLabel = createEspGui(egg, labelText)
     if espGui then
         displayedEggs[objectId] = {
             egg = egg,
             gui = espGui,
-            label = espGui:FindFirstChild("TextLabel"),
+            label = espLabel,
             eggName = eggName,
             currentPet = pet
         }
     end
 end
 
--- FUNCTION: Remove ESP
 local function removeESP(egg)
     local objectId = egg:GetAttribute("OBJECT_UUID")
     if objectId and displayedEggs[objectId] then
-        displayedEggs[objectId].gui:Destroy()
+        if displayedEggs[objectId].gui and displayedEggs[objectId].gui.Parent then
+            displayedEggs[objectId].gui:Destroy()
+        end
         displayedEggs[objectId] = nil
     end
 end
 
--- CONNECT ESP TO EGGS
 for _, egg in collectionService:GetTagged("PetEggServer") do addESP(egg) end
 collectionService:GetInstanceAddedSignal("PetEggServer"):Connect(addESP)
 collectionService:GetInstanceRemovedSignal("PetEggServer"):Connect(removeESP)
 
--- GUI SETUP
 local gui = Instance.new("ScreenGui", localPlayer:WaitForChild("PlayerGui"))
 gui.Name = "PetPredictorUI"
 gui.ResetOnSpawn = false
 
--- MAIN FRAME
 local frame = Instance.new("Frame", gui)
 frame.Size = UDim2.new(0, 240, 0, 150)
 frame.Position = UDim2.new(0.5, -120, 0.3, 0)
@@ -103,7 +97,6 @@ frame.Active = true
 frame.Draggable = true
 Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 10)
 
--- TITLE LABEL
 local title = Instance.new("TextLabel", frame)
 title.Size = UDim2.new(1, -30, 0, 30)
 title.Position = UDim2.new(0, 10, 0, 8)
@@ -114,7 +107,6 @@ title.Font = Enum.Font.GothamBold
 title.TextSize = 20
 title.TextXAlignment = Enum.TextXAlignment.Left
 
--- CLOSE BUTTON
 local close = Instance.new("TextButton", frame)
 close.Size = UDim2.new(0, 24, 0, 24)
 close.Position = UDim2.new(1, -30, 0, 10)
@@ -125,7 +117,6 @@ close.Font = Enum.Font.GothamBold
 close.TextSize = 16
 Instance.new("UICorner", close).CornerRadius = UDim.new(0, 6)
 
--- PREDICT BUTTON
 local predict = Instance.new("TextButton", frame)
 predict.Size = UDim2.new(0, 180, 0, 36)
 predict.Position = UDim2.new(0.5, -90, 0, 60)
@@ -144,16 +135,27 @@ predict.MouseLeave:Connect(function()
 end)
 
 predict.MouseButton1Click:Connect(function()
-    for _, data in pairs(displayedEggs) do
-        local newPet = getPetForEgg(data.eggName)
-        if data.label then
-            data.label.Text = data.eggName .. " | " .. newPet
+    for objectId, data in pairs(displayedEggs) do
+        if data.gui and data.gui.Parent then
+            data.gui:Destroy()
         end
-        data.currentPet = newPet
+    end
+    for objectId, data in pairs(displayedEggs) do
+        local newPet = getPetForEgg(data.eggName)
+        local labelText = data.eggName .. " | " .. newPet
+        local espGui, espLabel = createEspGui(data.egg, labelText)
+        if espGui then
+            displayedEggs[objectId] = {
+                egg = data.egg,
+                gui = espGui,
+                label = espLabel,
+                eggName = data.eggName,
+                currentPet = newPet
+            }
+        end
     end
 end)
 
--- CREDITS
 local credits = Instance.new("TextLabel", frame)
 credits.Size = UDim2.new(1, 0, 0, 20)
 credits.Position = UDim2.new(0, 0, 1, -20)
@@ -163,7 +165,6 @@ credits.Font = Enum.Font.Gotham
 credits.TextSize = 13
 credits.TextColor3 = Color3.fromRGB(170, 170, 170)
 
--- TOGGLE BUTTON
 local showBtn = Instance.new("TextButton", gui)
 showBtn.Size = UDim2.new(0, 100, 0, 36)
 showBtn.Position = UDim2.new(0, 20, 0.5, -18)
@@ -175,7 +176,6 @@ showBtn.TextSize = 16
 Instance.new("UICorner", showBtn).CornerRadius = UDim.new(0, 8)
 showBtn.Visible = false
 
--- TOGGLE EVENTS
 close.MouseButton1Click:Connect(function()
     frame.Visible = false
     showBtn.Visible = true
