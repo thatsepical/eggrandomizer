@@ -1,6 +1,7 @@
 local players = game:GetService("Players")
 local collectionService = game:GetService("CollectionService")
 local localPlayer = players.LocalPlayer or players:GetPlayers()[1]
+local UIS = game:GetService("UserInputService")
 
 local eggChances = {
     ["Common Egg"] = {["Dog"] = 33, ["Bunny"] = 33, ["Golden Lab"] = 33},
@@ -84,101 +85,160 @@ for _, egg in collectionService:GetTagged("PetEggServer") do addESP(egg) end
 collectionService:GetInstanceAddedSignal("PetEggServer"):Connect(addESP)
 collectionService:GetInstanceRemovedSignal("PetEggServer"):Connect(removeESP)
 
-local gui = Instance.new("ScreenGui", localPlayer:WaitForChild("PlayerGui"))
+-- UI Creation with AdvancedSpawnerUI style
+local playerGui = localPlayer:WaitForChild("PlayerGui")
+local gui = Instance.new("ScreenGui")
 gui.Name = "PetPredictorUI"
 gui.ResetOnSpawn = false
+gui.Parent = playerGui
 
-local mainContainer = Instance.new("Frame", gui)
-mainContainer.Size = UDim2.new(0, 180, 0, 120)
-mainContainer.Position = UDim2.new(0.5, -90, 0.3, 0)
-mainContainer.BackgroundColor3 = Color3.fromRGB(54, 57, 63)
-mainContainer.BorderSizePixel = 0
-mainContainer.Active = true
-mainContainer.Draggable = true
-Instance.new("UICorner", mainContainer).CornerRadius = UDim.new(0, 8)
+-- Style variables
+local isPC = UIS.MouseEnabled
+local uiScale = isPC and 1.15 or 1
 
-local contentFrame = Instance.new("Frame", mainContainer)
-contentFrame.Size = UDim2.new(1, 0, 1, 0)
-contentFrame.BackgroundTransparency = 1
-contentFrame.BorderSizePixel = 0
+local discordBlack = Color3.fromRGB(32, 34, 37)
+local lavender = Color3.fromRGB(196, 74, 74)
+local darkLavender = Color3.fromRGB(196, 74, 74)
+local headerColor = Color3.fromRGB(47, 49, 54)
+local textColor = Color3.fromRGB(220, 220, 220)
 
-local topSection = Instance.new("Frame", contentFrame)
-topSection.Size = UDim2.new(1, 0, 0, 40)
-topSection.Position = UDim2.new(0, 0, 0, 0)
-topSection.BackgroundColor3 = Color3.fromRGB(54, 57, 63)
-topSection.BorderSizePixel = 0
-topSection.ZIndex = 0
+-- Toggle button
+local toggleButton = Instance.new("TextButton")
+toggleButton.Name = "ToggleButton"
+toggleButton.Size = UDim2.new(0, 80*uiScale, 0, 25*uiScale)
+toggleButton.Position = UDim2.new(0, 10, 0, 10)
+toggleButton.Text = "Close/Open"
+toggleButton.Font = Enum.Font.SourceSans
+toggleButton.TextSize = 14
+toggleButton.BackgroundColor3 = discordBlack
+toggleButton.TextColor3 = Color3.new(1,1,1)
+toggleButton.Parent = gui
+Instance.new("UICorner", toggleButton).CornerRadius = UDim.new(0, 6)
 
-local bottomSection = Instance.new("Frame", contentFrame)
-bottomSection.Size = UDim2.new(1, 0, 1, -40)
-bottomSection.Position = UDim2.new(0, 0, 0, 40)
-bottomSection.BackgroundColor3 = Color3.fromRGB(33, 34, 38)
-bottomSection.BorderSizePixel = 0
-bottomSection.ZIndex = 0
+-- Main frame
+local mainFrame = Instance.new("Frame")
+mainFrame.Name = "MainFrame"
+mainFrame.Size = UDim2.new(0, 280*uiScale, 0, 200*uiScale)
+mainFrame.Position = UDim2.new(0.5, -140*uiScale, 0.5, -100*uiScale)
+mainFrame.BackgroundColor3 = discordBlack
+mainFrame.BorderSizePixel = 0
+mainFrame.Active = true
+mainFrame.Visible = true
+mainFrame.Parent = gui
+Instance.new("UICorner", mainFrame).CornerRadius = UDim.new(0, 8)
 
-local divider = Instance.new("Frame", contentFrame)
-divider.Size = UDim2.new(1, 0, 0, 1)
-divider.Position = UDim2.new(0, 0, 0, 40)
-divider.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
-divider.BorderSizePixel = 0
-divider.ZIndex = 1
+-- Dragging functionality
+local dragging, dragStart, startPos
+mainFrame.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        dragging = true
+        dragStart = input.Position
+        startPos = mainFrame.Position
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then 
+                dragging = false 
+            end
+        end)
+    end
+end)
 
-local title = Instance.new("TextLabel", contentFrame)
+UIS.InputChanged:Connect(function(input)
+    if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+        local delta = input.Position - dragStart
+        mainFrame.Position = UDim2.new(
+            startPos.X.Scale, startPos.X.Offset + delta.X,
+            startPos.Y.Scale, startPos.Y.Offset + delta.Y
+        )
+    end
+end)
+
+-- Header
+local header = Instance.new("Frame")
+header.Name = "Header"
+header.Size = UDim2.new(1, 0, 0, 40)
+header.BackgroundColor3 = headerColor
+header.BorderSizePixel = 0
+header.Parent = mainFrame
+Instance.new("UICorner", header).CornerRadius = UDim.new(0, 8)
+
+-- Version text
+local versionText = Instance.new("TextLabel")
+versionText.Text = "v2.0.0"
+versionText.Size = UDim2.new(0, 40, 0, 12)
+versionText.Position = UDim2.new(0, 5, 0, 5)
+versionText.Font = Enum.Font.SourceSans
+versionText.TextSize = 10
+versionText.TextColor3 = textColor
+versionText.BackgroundTransparency = 1
+versionText.TextXAlignment = Enum.TextXAlignment.Left
+versionText.Parent = header
+
+-- Title
+local title = Instance.new("TextLabel")
+title.Text = "EGG RANDOMIZER"
 title.Size = UDim2.new(1, -10, 0, 20)
 title.Position = UDim2.new(0, 5, 0, 5)
-title.BackgroundTransparency = 1
-title.Text = "EGG RANDOMIZER"
-title.TextColor3 = Color3.fromRGB(220, 220, 220)
 title.Font = Enum.Font.SourceSansBold
 title.TextSize = 16
+title.TextColor3 = textColor
+title.BackgroundTransparency = 1
 title.TextXAlignment = Enum.TextXAlignment.Center
-title.ZIndex = 2
+title.Parent = header
 
-local credits = Instance.new("TextLabel", contentFrame)
-credits.Size = UDim2.new(1, -10, 0, 15)
-credits.Position = UDim2.new(0, 5, 0, 23)
-credits.BackgroundTransparency = 1
-credits.Text = "by @zenxq"
-credits.Font = Enum.Font.SourceSans
-credits.TextSize = 11
-credits.TextColor3 = Color3.fromRGB(170, 170, 170)
-credits.TextXAlignment = Enum.TextXAlignment.Center
-credits.ZIndex = 2
+-- Credit
+local credit = Instance.new("TextLabel")
+credit.Text = "by @zenxq"
+credit.Size = UDim2.new(1, -10, 0, 12)
+credit.Position = UDim2.new(0, 5, 0, 22)
+credit.Font = Enum.Font.SourceSans
+credit.TextSize = 10
+credit.TextColor3 = textColor
+credit.BackgroundTransparency = 1
+credit.TextXAlignment = Enum.TextXAlignment.Center
+credit.Parent = header
 
-local close = Instance.new("TextButton", contentFrame)
-close.Size = UDim2.new(0, 20, 0, 20)
-close.Position = UDim2.new(1, -25, 0, 5)
-close.Text = "X"
-close.TextColor3 = Color3.fromRGB(220, 220, 220)
-close.BackgroundTransparency = 1
-close.Font = Enum.Font.SourceSansBold
-close.TextSize = 14
-close.ZIndex = 2
+-- Close button
+local closeBtn = Instance.new("TextButton")
+closeBtn.Size = UDim2.new(0, 25, 0, 25)
+closeBtn.Position = UDim2.new(1, -30, 0, 5)
+closeBtn.Text = "X"
+closeBtn.Font = Enum.Font.SourceSans
+closeBtn.TextSize = 16
+closeBtn.BackgroundTransparency = 1
+closeBtn.TextColor3 = textColor
+closeBtn.BorderSizePixel = 0
+closeBtn.Parent = header
 
+-- Content frame
+local contentFrame = Instance.new("Frame")
+contentFrame.Position = UDim2.new(0, 0, 0, 40)
+contentFrame.Size = UDim2.new(1, 0, 1, -40)
+contentFrame.BackgroundTransparency = 1
+contentFrame.Parent = mainFrame
+
+-- Predict button
 local predict = Instance.new("TextButton", contentFrame)
-predict.Size = UDim2.new(0, 140, 0, 30)
-predict.Position = UDim2.new(0.5, -70, 0, 50)
-predict.BackgroundColor3 = Color3.fromRGB(196, 74, 74)
+predict.Size = UDim2.new(0.9, 0, 0, 30)
+predict.Position = UDim2.new(0.05, 0, 0.1, 0)
+predict.BackgroundColor3 = lavender
 predict.TextColor3 = Color3.new(0, 0, 0)
 predict.Font = Enum.Font.SourceSans
 predict.TextSize = 14
 predict.Text = "PREDICT PETS"
-predict.ZIndex = 2
 Instance.new("UICorner", predict).CornerRadius = UDim.new(0, 6)
 
+-- Loading bar
 local loadingBarBg = Instance.new("Frame", contentFrame)
-loadingBarBg.Size = UDim2.new(0, 140, 0, 20)
-loadingBarBg.Position = UDim2.new(0.5, -70, 0, 50)
-loadingBarBg.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+loadingBarBg.Size = UDim2.new(0.9, 0, 0, 20)
+loadingBarBg.Position = UDim2.new(0.05, 0, 0.1, 0)
+loadingBarBg.BackgroundColor3 = Color3.fromRGB(50, 50, 55)
 loadingBarBg.BorderSizePixel = 0
 loadingBarBg.Visible = false
-loadingBarBg.ZIndex = 2
 
 local loadingBar = Instance.new("Frame", loadingBarBg)
 loadingBar.Size = UDim2.new(0, 0, 1, 0)
-loadingBar.BackgroundColor3 = Color3.fromRGB(53, 204, 51)
+loadingBar.BackgroundColor3 = Color3.fromRGB(50, 205, 50)
 loadingBar.BorderSizePixel = 0
-loadingBar.ZIndex = 3
 
 local loadingPercent = Instance.new("TextLabel", loadingBarBg)
 loadingPercent.Size = UDim2.new(1, 0, 1, 0)
@@ -187,28 +247,32 @@ loadingPercent.Text = "0%"
 loadingPercent.TextColor3 = Color3.new(1, 1, 1)
 loadingPercent.Font = Enum.Font.SourceSansBold
 loadingPercent.TextSize = 12
-loadingPercent.ZIndex = 4
 
 local loadingText = Instance.new("TextLabel", contentFrame)
-loadingText.Size = UDim2.new(1, -10, 0, 15)
-loadingText.Position = UDim2.new(0, 5, 0, 75)
-loadingText.BackgroundTransparency = 1
-loadingText.Text = "Rerolling pets in 3 seconds"
-loadingText.TextColor3 = Color3.fromRGB(220, 220, 220)
+loadingText.Size = UDim2.new(0.9, 0, 0, 40)
+loadingText.Position = UDim2.new(0.05, 0, 0.25, 0)
 loadingText.Font = Enum.Font.SourceSans
 loadingText.TextSize = 12
-loadingText.TextXAlignment = Enum.TextXAlignment.Center
+loadingText.TextColor3 = textColor
+loadingText.BackgroundTransparency = 1
+loadingText.TextXAlignment = Enum.TextXAlignment.Left
+loadingText.TextYAlignment = Enum.TextYAlignment.Top
+loadingText.TextWrapped = true
+loadingText.TextScaled = false
+loadingText.AutomaticSize = Enum.AutomaticSize.Y
 loadingText.Visible = false
-loadingText.ZIndex = 2
+loadingText.Text = "Rerolling pets in 3 seconds"
 
+-- Button hover effects
 predict.MouseEnter:Connect(function()
-    predict.BackgroundColor3 = Color3.fromRGB(166, 62, 62)
+    predict.BackgroundColor3 = darkLavender
 end)
 
 predict.MouseLeave:Connect(function()
-    predict.BackgroundColor3 = Color3.fromRGB(196, 74, 74)
+    predict.BackgroundColor3 = lavender
 end)
 
+-- Loading function
 local function startLoading()
     predict.Visible = false
     loadingBarBg.Visible = true
@@ -259,24 +323,14 @@ predict.MouseButton1Click:Connect(function()
     startLoading()
 end)
 
-local showBtn = Instance.new("TextButton", gui)
-showBtn.Size = UDim2.new(0, 80, 0, 25)
-showBtn.Position = UDim2.new(0, 10, 0.5, -12)
-showBtn.Text = "SHOW UI"
-showBtn.BackgroundColor3 = Color3.fromRGB(54, 57, 63)
-showBtn.TextColor3 = Color3.new(1, 1, 1)
-showBtn.Font = Enum.Font.SourceSansBold
-showBtn.TextSize = 12
-showBtn.ZIndex = 2
-Instance.new("UICorner", showBtn).CornerRadius = UDim.new(0, 6)
-showBtn.Visible = false
-
-close.MouseButton1Click:Connect(function()
-    mainContainer.Visible = false
-    showBtn.Visible = true
+-- Toggle functionality
+toggleButton.MouseButton1Click:Connect(function() 
+    mainFrame.Visible = not mainFrame.Visible 
 end)
 
-showBtn.MouseButton1Click:Connect(function()
-    mainContainer.Visible = true
-    showBtn.Visible = false
+closeBtn.MouseButton1Click:Connect(function() 
+    mainFrame.Visible = false 
 end)
+
+-- Initialize
+mainFrame.Visible = true
