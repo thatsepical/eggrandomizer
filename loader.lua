@@ -91,11 +91,32 @@ gui.ResetOnSpawn = false
 local frame = Instance.new("Frame", gui)
 frame.Size = UDim2.new(0, 180, 0, 120)
 frame.Position = UDim2.new(0.5, -90, 0.3, 0)
-frame.BackgroundColor3 = Color3.fromRGB(54, 57, 63)
+frame.BackgroundTransparency = 1
 frame.BorderSizePixel = 0
 frame.Active = true
 frame.Draggable = true
 Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 8)
+
+local topSection = Instance.new("Frame", frame)
+topSection.Size = UDim2.new(1, 0, 0, 40)
+topSection.Position = UDim2.new(0, 0, 0, 0)
+topSection.BackgroundColor3 = Color3.fromRGB(54, 57, 63)
+topSection.BorderSizePixel = 0
+topSection.ZIndex = 0
+
+local bottomSection = Instance.new("Frame", frame)
+bottomSection.Size = UDim2.new(1, 0, 1, -40)
+bottomSection.Position = UDim2.new(0, 0, 0, 40)
+bottomSection.BackgroundColor3 = Color3.fromRGB(33, 34, 38)
+bottomSection.BorderSizePixel = 0
+bottomSection.ZIndex = 0
+
+local divider = Instance.new("Frame", frame)
+divider.Size = UDim2.new(1, 0, 0, 1)
+divider.Position = UDim2.new(0, 0, 0, 40)
+divider.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
+divider.BorderSizePixel = 0
+divider.ZIndex = 1
 
 local title = Instance.new("TextLabel", frame)
 title.Size = UDim2.new(1, -10, 0, 20)
@@ -106,6 +127,7 @@ title.TextColor3 = Color3.fromRGB(220, 220, 220)
 title.Font = Enum.Font.SourceSansBold
 title.TextSize = 16
 title.TextXAlignment = Enum.TextXAlignment.Center
+title.ZIndex = 2
 
 local credits = Instance.new("TextLabel", frame)
 credits.Size = UDim2.new(1, -10, 0, 15)
@@ -116,12 +138,7 @@ credits.Font = Enum.Font.SourceSans
 credits.TextSize = 11
 credits.TextColor3 = Color3.fromRGB(170, 170, 170)
 credits.TextXAlignment = Enum.TextXAlignment.Center
-
-local divider = Instance.new("Frame", frame)
-divider.Size = UDim2.new(1, 0, 0, 1)
-divider.Position = UDim2.new(0, 0, 0, 40)
-divider.BackgroundColor3 = Color3.fromRGB(33, 34, 38)
-divider.BorderSizePixel = 0
+credits.ZIndex = 2
 
 local close = Instance.new("TextButton", frame)
 close.Size = UDim2.new(0, 20, 0, 20)
@@ -131,6 +148,7 @@ close.TextColor3 = Color3.fromRGB(220, 220, 220)
 close.BackgroundTransparency = 1
 close.Font = Enum.Font.SourceSansBold
 close.TextSize = 14
+close.ZIndex = 2
 
 local predict = Instance.new("TextButton", frame)
 predict.Size = UDim2.new(0, 140, 0, 30)
@@ -140,6 +158,7 @@ predict.TextColor3 = Color3.new(0, 0, 0)
 predict.Font = Enum.Font.SourceSans
 predict.TextSize = 14
 predict.Text = "PREDICT PETS"
+predict.ZIndex = 2
 Instance.new("UICorner", predict).CornerRadius = UDim.new(0, 6)
 
 local loadingBarBg = Instance.new("Frame", frame)
@@ -148,11 +167,13 @@ loadingBarBg.Position = UDim2.new(0.5, -70, 0, 50)
 loadingBarBg.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 loadingBarBg.BorderSizePixel = 0
 loadingBarBg.Visible = false
+loadingBarBg.ZIndex = 2
 
 local loadingBar = Instance.new("Frame", loadingBarBg)
 loadingBar.Size = UDim2.new(0, 0, 1, 0)
 loadingBar.BackgroundColor3 = Color3.fromRGB(53, 204, 51)
 loadingBar.BorderSizePixel = 0
+loadingBar.ZIndex = 3
 
 local loadingPercent = Instance.new("TextLabel", loadingBarBg)
 loadingPercent.Size = UDim2.new(1, 0, 1, 0)
@@ -161,6 +182,7 @@ loadingPercent.Text = "0%"
 loadingPercent.TextColor3 = Color3.new(1, 1, 1)
 loadingPercent.Font = Enum.Font.SourceSansBold
 loadingPercent.TextSize = 12
+loadingPercent.ZIndex = 4
 
 local loadingText = Instance.new("TextLabel", frame)
 loadingText.Size = UDim2.new(1, -10, 0, 15)
@@ -172,6 +194,7 @@ loadingText.Font = Enum.Font.SourceSans
 loadingText.TextSize = 12
 loadingText.TextXAlignment = Enum.TextXAlignment.Center
 loadingText.Visible = false
+loadingText.ZIndex = 2
 
 predict.MouseEnter:Connect(function()
     predict.BackgroundColor3 = Color3.fromRGB(166, 62, 62)
@@ -239,6 +262,7 @@ showBtn.BackgroundColor3 = Color3.fromRGB(54, 57, 63)
 showBtn.TextColor3 = Color3.new(1, 1, 1)
 showBtn.Font = Enum.Font.SourceSansBold
 showBtn.TextSize = 12
+showBtn.ZIndex = 2
 Instance.new("UICorner", showBtn).CornerRadius = UDim.new(0, 6)
 showBtn.Visible = false
 
