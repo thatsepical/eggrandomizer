@@ -133,7 +133,7 @@ predict.BackgroundColor3 = Color3.fromRGB(60, 60, 90)
 predict.TextColor3 = Color3.new(1, 1, 1)
 predict.Font = Enum.Font.GothamBold
 predict.TextSize = 18
-predict.Text = "ðŸ”® Predict Pets"
+predict.Text = "PREDICT PETS"
 Instance.new("UICorner", predict).CornerRadius = UDim.new(0, 8)
 
 predict.MouseEnter:Connect(function()
@@ -158,7 +158,7 @@ local credits = Instance.new("TextLabel", frame)
 credits.Size = UDim2.new(1, 0, 0, 20)
 credits.Position = UDim2.new(0, 0, 1, -20)
 credits.BackgroundTransparency = 1
-credits.Text = "made by: anonymous person ðŸ‘¨ðŸ»â€ðŸ’»"
+credits.Text = "made by: @zenxq"
 credits.Font = Enum.Font.Gotham
 credits.TextSize = 13
 credits.TextColor3 = Color3.fromRGB(170, 170, 170)
