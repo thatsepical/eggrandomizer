@@ -89,42 +89,42 @@ gui.Name = "PetPredictorUI"
 gui.ResetOnSpawn = false
 
 local frame = Instance.new("Frame", gui)
-frame.Size = UDim2.new(0, 240, 0, 150)
-frame.Position = UDim2.new(0.5, -120, 0.3, 0)
+frame.Size = UDim2.new(0, 180, 0, 100)
+frame.Position = UDim2.new(0.5, -90, 0.3, 0)
 frame.BackgroundColor3 = Color3.fromRGB(54, 57, 63)
 frame.BorderSizePixel = 0
 frame.Active = true
 frame.Draggable = true
-Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 10)
+Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 8)
 
 local title = Instance.new("TextLabel", frame)
-title.Size = UDim2.new(1, -30, 0, 30)
-title.Position = UDim2.new(0, 10, 0, 8)
+title.Size = UDim2.new(1, -30, 0, 20)
+title.Position = UDim2.new(0, 10, 0, 5)
 title.BackgroundTransparency = 1
 title.Text = "EGG RANDOMIZER"
 title.TextColor3 = Color3.fromRGB(255, 255, 255)
 title.Font = Enum.Font.SourceSansBold
-title.TextSize = 20
+title.TextSize = 16
 title.TextXAlignment = Enum.TextXAlignment.Left
 
 local close = Instance.new("TextButton", frame)
-close.Size = UDim2.new(0, 24, 0, 24)
-close.Position = UDim2.new(1, -30, 0, 10)
+close.Size = UDim2.new(0, 20, 0, 20)
+close.Position = UDim2.new(1, -25, 0, 5)
 close.Text = "X"
 close.TextColor3 = Color3.new(1, 1, 1)
 close.BackgroundTransparency = 1
 close.Font = Enum.Font.SourceSansBold
-close.TextSize = 16
+close.TextSize = 14
 
 local predict = Instance.new("TextButton", frame)
-predict.Size = UDim2.new(0, 180, 0, 36)
-predict.Position = UDim2.new(0.5, -90, 0, 60)
+predict.Size = UDim2.new(0, 140, 0, 30)
+predict.Position = UDim2.new(0.5, -70, 0, 40)
 predict.BackgroundColor3 = Color3.fromRGB(88, 101, 242)
 predict.TextColor3 = Color3.new(1, 1, 1)
 predict.Font = Enum.Font.SourceSansBold
-predict.TextSize = 18
+predict.TextSize = 14
 predict.Text = "PREDICT PETS"
-Instance.new("UICorner", predict).CornerRadius = UDim.new(0, 8)
+Instance.new("UICorner", predict).CornerRadius = UDim.new(0, 6)
 
 predict.MouseEnter:Connect(function()
     predict.BackgroundColor3 = Color3.fromRGB(71, 82, 196)
@@ -156,23 +156,23 @@ predict.MouseButton1Click:Connect(function()
 end)
 
 local credits = Instance.new("TextLabel", frame)
-credits.Size = UDim2.new(1, 0, 0, 20)
-credits.Position = UDim2.new(0, 0, 1, -20)
+credits.Size = UDim2.new(1, 0, 0, 15)
+credits.Position = UDim2.new(0, 0, 1, -15)
 credits.BackgroundTransparency = 1
-credits.Text = "made by: @zenxq"
+credits.Text = "by @zenxq"
 credits.Font = Enum.Font.SourceSans
-credits.TextSize = 13
+credits.TextSize = 11
 credits.TextColor3 = Color3.fromRGB(170, 170, 170)
 
 local showBtn = Instance.new("TextButton", gui)
-showBtn.Size = UDim2.new(0, 100, 0, 36)
-showBtn.Position = UDim2.new(0, 20, 0.5, -18)
-showBtn.Text = "ðŸ¾ Show UI"
+showBtn.Size = UDim2.new(0, 80, 0, 25)
+showBtn.Position = UDim2.new(0, 10, 0.5, -12)
+showBtn.Text = "SHOW UI"
 showBtn.BackgroundColor3 = Color3.fromRGB(54, 57, 63)
 showBtn.TextColor3 = Color3.new(1, 1, 1)
 showBtn.Font = Enum.Font.SourceSansBold
-showBtn.TextSize = 16
-Instance.new("UICorner", showBtn).CornerRadius = UDim.new(0, 8)
+showBtn.TextSize = 12
+Instance.new("UICorner", showBtn).CornerRadius = UDim.new(0, 6)
 showBtn.Visible = false
 
 close.MouseButton1Click:Connect(function()
