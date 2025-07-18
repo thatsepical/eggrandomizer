@@ -45,7 +45,7 @@ local function createEspGui(object, eggName, pet)
     label.Size = UDim2.new(1, 0, 1, 0)
     label.BackgroundTransparency = 1
     label.TextColor3 = Color3.new(1, 1, 1)
-    label.Text = eggName .. " Egg\n" .. pet
+    label.Text = eggName .. "\n" .. pet
     label.Font = Enum.Font.SourceSans
     label.TextSize = 14
     label.TextScaled = false
