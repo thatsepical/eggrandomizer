@@ -105,7 +105,7 @@ local textColor = Color3.fromRGB(220, 220, 220)
 local toggleButton = Instance.new("TextButton")
 toggleButton.Name = "ToggleButton"
 toggleButton.Size = UDim2.new(0, 80*uiScale, 0, 25*uiScale)
-toggleButton.Position = UDim2.new(0, 10, 0, 20)
+toggleButton.Position = UDim2.new(0, 10, 0, 40) -- Changed Y position to be lower
 toggleButton.Text = "Close/Open"
 toggleButton.Font = Enum.Font.SourceSans
 toggleButton.TextSize = 14
@@ -319,29 +319,12 @@ predict.MouseButton1Click:Connect(function()
     startLoading()
 end)
 
-local showBtn = Instance.new("TextButton", gui)
-showBtn.Size = UDim2.new(0, 80, 0, 25)
-showBtn.Position = UDim2.new(0, 10, 0.5, -12)
-showBtn.Text = "SHOW UI"
-showBtn.BackgroundColor3 = discordBlack
-showBtn.TextColor3 = Color3.new(1, 1, 1)
-showBtn.Font = Enum.Font.SourceSansBold
-showBtn.TextSize = 12
-Instance.new("UICorner", showBtn).CornerRadius = UDim.new(0, 6)
-showBtn.Visible = false
-
 toggleButton.MouseButton1Click:Connect(function() 
     mainFrame.Visible = not mainFrame.Visible 
 end)
 
 closeBtn.MouseButton1Click:Connect(function() 
-    mainFrame.Visible = false 
-    showBtn.Visible = true
-end)
-
-showBtn.MouseButton1Click:Connect(function() 
-    mainFrame.Visible = true 
-    showBtn.Visible = false
+    mainFrame.Visible = false
 end)
 
 mainFrame.Visible = true
