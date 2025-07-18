@@ -95,7 +95,12 @@ frame.BackgroundTransparency = 1
 frame.BorderSizePixel = 0
 frame.Active = true
 frame.Draggable = true
-Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 8)
+
+local outerFrame = Instance.new("Frame", frame)
+outerFrame.Size = UDim2.new(1, 0, 1, 0)
+outerFrame.BackgroundColor3 = Color3.fromRGB(54, 57, 63)
+outerFrame.BorderSizePixel = 0
+Instance.new("UICorner", outerFrame).CornerRadius = UDim.new(0, 8)
 
 local topSection = Instance.new("Frame", frame)
 topSection.Size = UDim2.new(1, 0, 0, 40)
