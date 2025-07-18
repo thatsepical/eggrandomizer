@@ -91,6 +91,9 @@ gui.Name = "PetPredictorUI"
 gui.ResetOnSpawn = false
 gui.Parent = playerGui
 
+local isPC = UIS.MouseEnabled
+local uiScale = isPC and 1.15 or 1
+
 local discordBlack = Color3.fromRGB(32, 34, 37)
 local lavender = Color3.fromRGB(196, 74, 74)
 local darkLavender = Color3.fromRGB(196, 74, 74)
@@ -99,7 +102,7 @@ local textColor = Color3.fromRGB(220, 220, 220)
 
 local toggleButton = Instance.new("TextButton")
 toggleButton.Name = "ToggleButton"
-toggleButton.Size = UDim2.new(0, 80, 0, 25)
+toggleButton.Size = UDim2.new(0, 80*uiScale, 0, 25*uiScale)
 toggleButton.Position = UDim2.new(0, 10, 0, 10)
 toggleButton.Text = "Close/Open"
 toggleButton.Font = Enum.Font.SourceSans
@@ -144,6 +147,7 @@ UIS.InputChanged:Connect(function(input)
     end
 end)
 
+-- Header with exact same style as AdvancedSpawnerUI
 local header = Instance.new("Frame")
 header.Name = "Header"
 header.Size = UDim2.new(1, 0, 0, 40)
@@ -152,12 +156,23 @@ header.BorderSizePixel = 0
 header.Parent = mainFrame
 Instance.new("UICorner", header).CornerRadius = UDim.new(0, 8)
 
+local versionText = Instance.new("TextLabel")
+versionText.Text = "v1.0.0"
+versionText.Size = UDim2.new(0, 40, 0, 12)
+versionText.Position = UDim2.new(0, 5, 0, 5)
+versionText.Font = Enum.Font.SourceSans
+versionText.TextSize = 10
+versionText.TextColor3 = textColor
+versionText.BackgroundTransparency = 1
+versionText.TextXAlignment = Enum.TextXAlignment.Left
+versionText.Parent = header
+
 local title = Instance.new("TextLabel")
 title.Text = "EGG RANDOMIZER"
 title.Size = UDim2.new(1, -10, 0, 20)
 title.Position = UDim2.new(0, 5, 0, 5)
 title.Font = Enum.Font.SourceSansBold
-title.TextSize = 14
+title.TextSize = 16
 title.TextColor3 = textColor
 title.BackgroundTransparency = 1
 title.TextXAlignment = Enum.TextXAlignment.Center
@@ -174,28 +189,29 @@ credit.BackgroundTransparency = 1
 credit.TextXAlignment = Enum.TextXAlignment.Center
 credit.Parent = header
 
--- Border below credits (edges the box)
-local border = Instance.new("Frame")
-border.Size = UDim2.new(1, -10, 0, 1)
-border.Position = UDim2.new(0, 5, 0, 37)
-border.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
-border.BorderSizePixel = 0
-border.Parent = header
+-- Tab background (like AdvancedSpawnerUI but adjusted for small size)
+local tabBackground = Instance.new("Frame")
+tabBackground.Size = UDim2.new(1, 0, 0, 20)
+tabBackground.Position = UDim2.new(0, 0, 0, 35)
+tabBackground.BackgroundColor3 = headerColor
+tabBackground.BorderSizePixel = 0
+tabBackground.Parent = header
+Instance.new("UICorner", tabBackground).CornerRadius = UDim.new(0, 4)
 
 local closeBtn = Instance.new("TextButton")
-closeBtn.Size = UDim2.new(0, 20, 0, 20)
-closeBtn.Position = UDim2.new(1, -25, 0, 5)
+closeBtn.Size = UDim2.new(0, 25, 0, 25)
+closeBtn.Position = UDim2.new(1, -30, 0, 5)
 closeBtn.Text = "X"
 closeBtn.Font = Enum.Font.SourceSans
-closeBtn.TextSize = 14
+closeBtn.TextSize = 16
 closeBtn.BackgroundTransparency = 1
 closeBtn.TextColor3 = textColor
 closeBtn.BorderSizePixel = 0
 closeBtn.Parent = header
 
 local contentFrame = Instance.new("Frame")
-contentFrame.Position = UDim2.new(0, 0, 0, 40)
-contentFrame.Size = UDim2.new(1, 0, 1, -40)
+contentFrame.Position = UDim2.new(0, 0, 0, 55) -- Adjusted for tab background
+contentFrame.Size = UDim2.new(1, 0, 1, -55)
 contentFrame.BackgroundTransparency = 1
 contentFrame.Parent = mainFrame
 
