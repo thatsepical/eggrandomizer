@@ -100,10 +100,11 @@ local darkLavender = Color3.fromRGB(196, 74, 74)
 local headerColor = Color3.fromRGB(47, 49, 54)
 local textColor = Color3.fromRGB(220, 220, 220)
 
+-- Toggle button moved lower (Y position changed from 10 to 20)
 local toggleButton = Instance.new("TextButton")
 toggleButton.Name = "ToggleButton"
 toggleButton.Size = UDim2.new(0, 80*uiScale, 0, 25*uiScale)
-toggleButton.Position = UDim2.new(0, 10, 0, 10)
+toggleButton.Position = UDim2.new(0, 10, 0, 20)
 toggleButton.Text = "Close/Open"
 toggleButton.Font = Enum.Font.SourceSans
 toggleButton.TextSize = 14
@@ -213,21 +214,19 @@ contentFrame.Size = UDim2.new(1, 0, 1, -55)
 contentFrame.BackgroundTransparency = 1
 contentFrame.Parent = mainFrame
 
--- Centered Predict button (moved lower)
 local predict = Instance.new("TextButton", contentFrame)
-predict.Size = UDim2.new(0.8, 0, 0, 30)  -- Made slightly taller
-predict.Position = UDim2.new(0.1, 0, 0.3, 0)  -- Moved lower
+predict.Size = UDim2.new(0.8, 0, 0, 30)
+predict.Position = UDim2.new(0.1, 0, 0.3, 0)
 predict.BackgroundColor3 = lavender
 predict.TextColor3 = Color3.new(0, 0, 0)
 predict.Font = Enum.Font.SourceSans
-predict.TextSize = 14  -- Slightly larger text
+predict.TextSize = 14
 predict.Text = "PREDICT PETS"
 Instance.new("UICorner", predict).CornerRadius = UDim.new(0, 6)
 
--- Loading bar (bigger and in same position as button)
 local loadingBarBg = Instance.new("Frame", contentFrame)
-loadingBarBg.Size = UDim2.new(0.8, 0, 0, 25)  -- Bigger height
-loadingBarBg.Position = UDim2.new(0.1, 0, 0.3, 0)  -- Same position as button
+loadingBarBg.Size = UDim2.new(0.8, 0, 0, 25)
+loadingBarBg.Position = UDim2.new(0.1, 0, 0.3, 0)
 loadingBarBg.BackgroundColor3 = Color3.fromRGB(50, 50, 55)
 loadingBarBg.BorderSizePixel = 0
 loadingBarBg.Visible = false
@@ -243,17 +242,18 @@ loadingPercent.BackgroundTransparency = 1
 loadingPercent.Text = "0%"
 loadingPercent.TextColor3 = Color3.new(1, 1, 1)
 loadingPercent.Font = Enum.Font.SourceSansBold
-loadingPercent.TextSize = 14  -- Bigger text
+loadingPercent.TextSize = 14
 loadingPercent.TextStrokeTransparency = 0.5
 
+-- Loading text moved below loading bar (Y position changed from 0.6 to 0.55)
 local loadingText = Instance.new("TextLabel", contentFrame)
-loadingText.Size = UDim2.new(0.9, 0, 0, 30)
-loadingText.Position = UDim2.new(0.05, 0, 0.6, 0)  -- Adjusted position
+loadingText.Size = UDim2.new(0.8, 0, 0, 20)
+loadingText.Position = UDim2.new(0.1, 0, 0.55, 0)
 loadingText.Font = Enum.Font.SourceSans
 loadingText.TextSize = 12
 loadingText.TextColor3 = textColor
 loadingText.BackgroundTransparency = 1
-loadingText.TextXAlignment = Enum.TextXAlignment.Left
+loadingText.TextXAlignment = Enum.TextXAlignment.Center
 loadingText.TextYAlignment = Enum.TextYAlignment.Top
 loadingText.TextWrapped = true
 loadingText.Visible = false
