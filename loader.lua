@@ -89,7 +89,7 @@ gui.Name = "PetPredictorUI"
 gui.ResetOnSpawn = false
 
 local frame = Instance.new("Frame", gui)
-frame.Size = UDim2.new(0, 180, 0, 100)
+frame.Size = UDim2.new(0, 180, 0, 120)
 frame.Position = UDim2.new(0.5, -90, 0.3, 0)
 frame.BackgroundColor3 = Color3.fromRGB(54, 57, 63)
 frame.BorderSizePixel = 0
@@ -109,7 +109,7 @@ title.TextXAlignment = Enum.TextXAlignment.Center
 
 local credits = Instance.new("TextLabel", frame)
 credits.Size = UDim2.new(1, -10, 0, 15)
-credits.Position = UDim2.new(0, 5, 0, 25)
+credits.Position = UDim2.new(0, 5, 0, 28)
 credits.BackgroundTransparency = 1
 credits.Text = "by @zenxq"
 credits.Font = Enum.Font.SourceSans
@@ -128,13 +128,38 @@ close.TextSize = 14
 
 local predict = Instance.new("TextButton", frame)
 predict.Size = UDim2.new(0, 140, 0, 30)
-predict.Position = UDim2.new(0.5, -70, 0, 50)
+predict.Position = UDim2.new(0.5, -70, 0, 55)
 predict.BackgroundColor3 = Color3.fromRGB(196, 74, 74)
 predict.TextColor3 = Color3.new(0, 0, 0)
 predict.Font = Enum.Font.SourceSans
 predict.TextSize = 14
 predict.Text = "PREDICT PETS"
 Instance.new("UICorner", predict).CornerRadius = UDim.new(0, 6)
+
+local loadingBarBg = Instance.new("Frame", frame)
+loadingBarBg.Size = UDim2.new(0, 140, 0, 20)
+loadingBarBg.Position = UDim2.new(0.5, -70, 0, 90)
+loadingBarBg.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+loadingBarBg.BorderSizePixel = 0
+loadingBarBg.Visible = false
+Instance.new("UICorner", loadingBarBg).CornerRadius = UDim.new(0, 4)
+
+local loadingBar = Instance.new("Frame", loadingBarBg)
+loadingBar.Size = UDim2.new(0, 0, 1, 0)
+loadingBar.BackgroundColor3 = Color3.fromRGB(88, 101, 242)
+loadingBar.BorderSizePixel = 0
+Instance.new("UICorner", loadingBar).CornerRadius = UDim.new(0, 4)
+
+local loadingText = Instance.new("TextLabel", frame)
+loadingText.Size = UDim2.new(1, -10, 0, 15)
+loadingText.Position = UDim2.new(0, 5, 0, 90)
+loadingText.BackgroundTransparency = 1
+loadingText.Text = "Predicting pets..."
+loadingText.TextColor3 = Color3.fromRGB(220, 220, 220)
+loadingText.Font = Enum.Font.SourceSans
+loadingText.TextSize = 12
+loadingText.TextXAlignment = Enum.TextXAlignment.Center
+loadingText.Visible = false
 
 predict.MouseEnter:Connect(function()
     predict.BackgroundColor3 = Color3.fromRGB(166, 62, 62)
@@ -143,7 +168,25 @@ predict.MouseLeave:Connect(function()
     predict.BackgroundColor3 = Color3.fromRGB(196, 74, 74)
 end)
 
-predict.MouseButton1Click:Connect(function()
+local function startLoading()
+    predict.Visible = false
+    loadingText.Visible = true
+    loadingBarBg.Visible = true
+    
+    local startTime = tick()
+    local duration = 3
+    
+    while tick() - startTime < duration do
+        local progress = (tick() - startTime) / duration
+        loadingBar.Size = UDim2.new(progress, 0, 1, 0)
+        task.wait()
+    end
+    
+    loadingText.Visible = false
+    loadingBarBg.Visible = false
+    loadingBar.Size = UDim2.new(0, 0, 1, 0)
+    predict.Visible = true
+    
     for objectId, data in pairs(displayedEggs) do
         if data.gui and data.gui.Parent then
             data.gui:Destroy()
@@ -163,6 +206,10 @@ predict.MouseButton1Click:Connect(function()
             }
         end
     end
+end
+
+predict.MouseButton1Click:Connect(function()
+    startLoading()
 end)
 
 local showBtn = Instance.new("TextButton", gui)
