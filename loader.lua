@@ -100,7 +100,6 @@ local darkLavender = Color3.fromRGB(196, 74, 74)
 local headerColor = Color3.fromRGB(47, 49, 54)
 local textColor = Color3.fromRGB(220, 220, 220)
 
--- Toggle button moved lower (Y position changed from 10 to 20)
 local toggleButton = Instance.new("TextButton")
 toggleButton.Name = "ToggleButton"
 toggleButton.Size = UDim2.new(0, 80*uiScale, 0, 25*uiScale)
@@ -245,17 +244,19 @@ loadingPercent.Font = Enum.Font.SourceSansBold
 loadingPercent.TextSize = 14
 loadingPercent.TextStrokeTransparency = 0.5
 
--- Loading text moved below loading bar (Y position changed from 0.6 to 0.55)
 local loadingText = Instance.new("TextLabel", contentFrame)
-loadingText.Size = UDim2.new(0.8, 0, 0, 20)
+loadingText.Name = "LoadingText"
+loadingText.Size = UDim2.new(0.8, 0, 0, 40)
 loadingText.Position = UDim2.new(0.1, 0, 0.55, 0)
 loadingText.Font = Enum.Font.SourceSans
 loadingText.TextSize = 12
 loadingText.TextColor3 = textColor
 loadingText.BackgroundTransparency = 1
-loadingText.TextXAlignment = Enum.TextXAlignment.Center
+loadingText.TextXAlignment = Enum.TextXAlignment.Left
 loadingText.TextYAlignment = Enum.TextYAlignment.Top
 loadingText.TextWrapped = true
+loadingText.TextScaled = false
+loadingText.AutomaticSize = Enum.AutomaticSize.Y
 loadingText.Visible = false
 loadingText.Text = "Rerolling pets in 3 seconds"
 
