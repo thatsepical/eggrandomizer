@@ -85,7 +85,7 @@ for _, egg in collectionService:GetTagged("PetEggServer") do addESP(egg) end
 collectionService:GetInstanceAddedSignal("PetEggServer"):Connect(addESP)
 collectionService:GetInstanceRemovedSignal("PetEggServer"):Connect(removeESP)
 
--- UI Creation with AdvancedSpawnerUI style
+-- UI Creation with AdvancedSpawnerUI style and exact dimensions (280x200)
 local playerGui = localPlayer:WaitForChild("PlayerGui")
 local gui = Instance.new("ScreenGui")
 gui.Name = "PetPredictorUI"
@@ -102,7 +102,7 @@ local darkLavender = Color3.fromRGB(196, 74, 74)
 local headerColor = Color3.fromRGB(47, 49, 54)
 local textColor = Color3.fromRGB(220, 220, 220)
 
--- Toggle button
+-- Toggle button (same size/position as AdvancedSpawnerUI)
 local toggleButton = Instance.new("TextButton")
 toggleButton.Name = "ToggleButton"
 toggleButton.Size = UDim2.new(0, 80*uiScale, 0, 25*uiScale)
@@ -115,7 +115,7 @@ toggleButton.TextColor3 = Color3.new(1,1,1)
 toggleButton.Parent = gui
 Instance.new("UICorner", toggleButton).CornerRadius = UDim.new(0, 6)
 
--- Main frame
+-- Main frame (exact 280x200 size from AdvancedSpawnerUI)
 local mainFrame = Instance.new("Frame")
 mainFrame.Name = "MainFrame"
 mainFrame.Size = UDim2.new(0, 280*uiScale, 0, 200*uiScale)
@@ -127,7 +127,7 @@ mainFrame.Visible = true
 mainFrame.Parent = gui
 Instance.new("UICorner", mainFrame).CornerRadius = UDim.new(0, 8)
 
--- Dragging functionality
+-- Dragging functionality (same as AdvancedSpawnerUI)
 local dragging, dragStart, startPos
 mainFrame.InputBegan:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
@@ -152,7 +152,7 @@ UIS.InputChanged:Connect(function(input)
     end
 end)
 
--- Header
+-- Header (same height as AdvancedSpawnerUI)
 local header = Instance.new("Frame")
 header.Name = "Header"
 header.Size = UDim2.new(1, 0, 0, 40)
@@ -197,7 +197,7 @@ credit.BackgroundTransparency = 1
 credit.TextXAlignment = Enum.TextXAlignment.Center
 credit.Parent = header
 
--- Close button
+-- Close button (same as AdvancedSpawnerUI)
 local closeBtn = Instance.new("TextButton")
 closeBtn.Size = UDim2.new(0, 25, 0, 25)
 closeBtn.Position = UDim2.new(1, -30, 0, 5)
@@ -209,14 +209,14 @@ closeBtn.TextColor3 = textColor
 closeBtn.BorderSizePixel = 0
 closeBtn.Parent = header
 
--- Content frame
+-- Content frame (fills remaining space below header)
 local contentFrame = Instance.new("Frame")
 contentFrame.Position = UDim2.new(0, 0, 0, 40)
 contentFrame.Size = UDim2.new(1, 0, 1, -40)
 contentFrame.BackgroundTransparency = 1
 contentFrame.Parent = mainFrame
 
--- Predict button
+-- Predict button (adjusted for 280 width)
 local predict = Instance.new("TextButton", contentFrame)
 predict.Size = UDim2.new(0.9, 0, 0, 30)
 predict.Position = UDim2.new(0.05, 0, 0.1, 0)
@@ -227,7 +227,7 @@ predict.TextSize = 14
 predict.Text = "PREDICT PETS"
 Instance.new("UICorner", predict).CornerRadius = UDim.new(0, 6)
 
--- Loading bar
+-- Loading bar (same style as AdvancedSpawnerUI)
 local loadingBarBg = Instance.new("Frame", contentFrame)
 loadingBarBg.Size = UDim2.new(0.9, 0, 0, 20)
 loadingBarBg.Position = UDim2.new(0.05, 0, 0.1, 0)
@@ -263,7 +263,7 @@ loadingText.AutomaticSize = Enum.AutomaticSize.Y
 loadingText.Visible = false
 loadingText.Text = "Rerolling pets in 3 seconds"
 
--- Button hover effects
+-- Button hover effects (same as AdvancedSpawnerUI)
 predict.MouseEnter:Connect(function()
     predict.BackgroundColor3 = darkLavender
 end)
@@ -323,7 +323,7 @@ predict.MouseButton1Click:Connect(function()
     startLoading()
 end)
 
--- Toggle functionality
+-- Toggle functionality (same as AdvancedSpawnerUI)
 toggleButton.MouseButton1Click:Connect(function() 
     mainFrame.Visible = not mainFrame.Visible 
 end)
