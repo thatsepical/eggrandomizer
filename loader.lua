@@ -107,6 +107,16 @@ title.Font = Enum.Font.SourceSansBold
 title.TextSize = 16
 title.TextXAlignment = Enum.TextXAlignment.Center
 
+local credits = Instance.new("TextLabel", frame)
+credits.Size = UDim2.new(1, -10, 0, 15)
+credits.Position = UDim2.new(0, 5, 0, 25)
+credits.BackgroundTransparency = 1
+credits.Text = "by @zenxq"
+credits.Font = Enum.Font.SourceSans
+credits.TextSize = 11
+credits.TextColor3 = Color3.fromRGB(170, 170, 170)
+credits.TextXAlignment = Enum.TextXAlignment.Center
+
 local close = Instance.new("TextButton", frame)
 close.Size = UDim2.new(0, 20, 0, 20)
 close.Position = UDim2.new(1, -25, 0, 5)
@@ -118,19 +128,19 @@ close.TextSize = 14
 
 local predict = Instance.new("TextButton", frame)
 predict.Size = UDim2.new(0, 140, 0, 30)
-predict.Position = UDim2.new(0.5, -70, 0, 40)
-predict.BackgroundColor3 = Color3.fromRGB(88, 101, 242)
-predict.TextColor3 = Color3.new(1, 1, 1)
-predict.Font = Enum.Font.SourceSansBold
+predict.Position = UDim2.new(0.5, -70, 0, 50)
+predict.BackgroundColor3 = Color3.fromRGB(196, 74, 74)
+predict.TextColor3 = Color3.new(0, 0, 0)
+predict.Font = Enum.Font.SourceSans
 predict.TextSize = 14
 predict.Text = "PREDICT PETS"
 Instance.new("UICorner", predict).CornerRadius = UDim.new(0, 6)
 
 predict.MouseEnter:Connect(function()
-    predict.BackgroundColor3 = Color3.fromRGB(71, 82, 196)
+    predict.BackgroundColor3 = Color3.fromRGB(166, 62, 62)
 end)
 predict.MouseLeave:Connect(function()
-    predict.BackgroundColor3 = Color3.fromRGB(88, 101, 242)
+    predict.BackgroundColor3 = Color3.fromRGB(196, 74, 74)
 end)
 
 predict.MouseButton1Click:Connect(function()
@@ -154,15 +164,6 @@ predict.MouseButton1Click:Connect(function()
         end
     end
 end)
-
-local credits = Instance.new("TextLabel", frame)
-credits.Size = UDim2.new(1, 0, 0, 15)
-credits.Position = UDim2.new(0, 0, 1, -15)
-credits.BackgroundTransparency = 1
-credits.Text = "by @zenxq"
-credits.Font = Enum.Font.SourceSans
-credits.TextSize = 11
-credits.TextColor3 = Color3.fromRGB(170, 170, 170)
 
 local showBtn = Instance.new("TextButton", gui)
 showBtn.Size = UDim2.new(0, 80, 0, 25)
