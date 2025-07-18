@@ -1,257 +1,176 @@
-local player = game.Players.LocalPlayer
-local screenGui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui"))
-screenGui.Name = "CustomGUI"
-screenGui.ResetOnSpawn = false
-
-local mainFrame = Instance.new("Frame")
-mainFrame.Size = UDim2.new(0, 300, 0, 300)
-mainFrame.Position = UDim2.new(0, 50, 0, 50)
-mainFrame.BackgroundTransparency = 1
-mainFrame.Active = true
-mainFrame.Draggable = true
-mainFrame.Parent = screenGui
-
-local updateAllEsp = nil
-local activeEggs = {}
-local espCache = {}
-
-local cooldownLabel = Instance.new("TextLabel")
-cooldownLabel.Parent = mainFrame
-cooldownLabel.Position = UDim2.new(0, 0, 0, 120)
-cooldownLabel.Size = UDim2.new(0, 240, 0, 25)
-cooldownLabel.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-cooldownLabel.TextColor3 = Color3.new(1, 1, 1)
-cooldownLabel.TextScaled = true
-cooldownLabel.Font = Enum.Font.SourceSansBold
-cooldownLabel.Visible = false
-
-local function createToggle(name, pos, initialState, callback)
-    local frame = Instance.new("Frame")
-    frame.Name = name
-    frame.Position = pos
-    frame.Size = UDim2.new(0, 240, 0, 50)
-    frame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-    frame.BorderSizePixel = 0
-    frame.Parent = mainFrame
-
-    local button = Instance.new("TextButton")
-    button.Size = UDim2.new(1, 0, 1, 0)
-    button.BackgroundTransparency = 1
-    button.TextScaled = true
-    button.Font = Enum.Font.SourceSansBold
-    button.TextColor3 = Color3.new(1, 1, 1)
-    button.Parent = frame
-
-    local isOn = initialState
-    local randomizerRunning = false
-
-    local function updateText()
-        local icon = isOn and ":green_circle:" or ":red_circle:"
-        local status = isOn and "ON" or "OFF"
-        if name == "AutoHatch" then
-            button.Text = icon .. " Auto Hatch:\n" .. status
-        elseif name == "AutoRandomizer" then
-            button.Text = icon .. " Auto\nRandomizer: " .. status
-        end
-    end
-
-    button.MouseButton1Click:Connect(function()
-        isOn = not isOn
-        updateText()
-
-        if name == "AutoRandomizer" then
-            if isOn and not randomizerRunning then
-                randomizerRunning = true
-                task.spawn(function()
-                    while isOn do
-                        if callback then callback(true) end
-                        cooldownLabel.Visible = true
-                        for i = 10, 1, -1 do
-                            cooldownLabel.Text = "Cooldown: " .. i .. "s"
-                            task.wait(1)
-                        end
-                        cooldownLabel.Text = "Randomizing..."
-                        task.wait(3)
-                    end
-                    cooldownLabel.Visible = false
-                    cooldownLabel.Text = ""
-                    randomizerRunning = false
-                end)
-            end
-        else
-            if callback then callback(isOn) end
-        end
-    end)
-
-    updateText()
-end
-
-createToggle("AutoHatch", UDim2.new(0, 0, 0, 0), true)
-createToggle("AutoRandomizer", UDim2.new(0, 0, 0, 60), false, function()
-    if updateAllEsp then updateAllEsp() end
-end)
-
-local antiAfkFrame = Instance.new("Frame", mainFrame)
-antiAfkFrame.Position = UDim2.new(0, 0, 0, 160)
-antiAfkFrame.Size = UDim2.new(0, 240, 0, 50)
-antiAfkFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-antiAfkFrame.BorderSizePixel = 0
-
-local antiAfkLabel = Instance.new("TextLabel", antiAfkFrame)
-antiAfkLabel.Size = UDim2.new(1, 0, 1, 0)
-antiAfkLabel.BackgroundTransparency = 1
-antiAfkLabel.Text = ":white_check_mark: Anti-AFK: ON"
-antiAfkLabel.TextScaled = true
-antiAfkLabel.Font = Enum.Font.SourceSansBold
-antiAfkLabel.TextColor3 = Color3.new(1, 1, 1)
-
-local helpButton = Instance.new("TextButton", mainFrame)
-helpButton.Position = UDim2.new(0, 250, 0, 0)
-helpButton.Size = UDim2.new(0, 30, 0, 50)
-helpButton.Text = ":question:"
-helpButton.TextScaled = true
-helpButton.Font = Enum.Font.SourceSansBold
-helpButton.TextColor3 = Color3.new(1, 1, 1)
-helpButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-helpButton.BorderSizePixel = 0
-
-local helpPopup = Instance.new("Frame", mainFrame)
-helpPopup.Position = UDim2.new(0.5, -150, 0.5, -75)
-helpPopup.Size = UDim2.new(0, 300, 0, 150)
-helpPopup.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-helpPopup.Visible = false
-helpPopup.BorderSizePixel = 0
-
-local helpText = Instance.new("TextLabel", helpPopup)
-helpText.Size = UDim2.new(1, -20, 1, -20)
-helpText.Position = UDim2.new(0, 10, 0, 10)
-helpText.BackgroundTransparency = 1
-helpText.TextColor3 = Color3.new(1, 1, 1)
-helpText.Font = Enum.Font.SourceSans
-helpText.TextSize = 18
-helpText.TextWrapped = true
-helpText.Text = "Auto Hatches when:\nQueen Bee, Raccoon, Dragonfly,\nMimic Octopus, Butterfly, Disco Bee"
-
-helpButton.MouseButton1Click:Connect(function()
-    helpPopup.Visible = not helpPopup.Visible
-end)
-
-local replicatedStorage = game:GetService("ReplicatedStorage")
+local players = game:GetService("Players")
 local collectionService = game:GetService("CollectionService")
-local runService = game:GetService("RunService")
-local currentCamera = workspace.CurrentCamera
-local localPlayer = player
+local localPlayer = players.LocalPlayer or players:GetPlayers()[1]
 
-local hatchFunction
-local eggModels
-local eggPets
+local eggChances = {
+    ["Common Egg"] = {["Dog"] = 33, ["Bunny"] = 33, ["Golden Lab"] = 33},
+    ["Uncommon Egg"] = {["Black Bunny"] = 25, ["Chicken"] = 25, ["Cat"] = 25, ["Deer"] = 25},
+    ["Rare Egg"] = {["Orange Tabby"] = 33.33, ["Spotted Deer"] = 25, ["Pig"] = 16.67, ["Rooster"] = 16.67, ["Monkey"] = 8.33},
+    ["Legendary Egg"] = {["Cow"] = 42.55, ["Silver Monkey"] = 42.55, ["Sea Otter"] = 10.64, ["Turtle"] = 2.13, ["Polar Bear"] = 2.13},
+    ["Mythic Egg"] = {["Grey Mouse"] = 37.5, ["Brown Mouse"] = 26.79, ["Squirrel"] = 26.79, ["Red Giant Ant"] = 8.93, ["Red Fox"] = 0},
+    ["Bug Egg"] = {["Snail"] = 40, ["Giant Ant"] = 35, ["Caterpillar"] = 25, ["Praying Mantis"] = 0, ["Dragon Fly"] = 0},
+    ["Night Egg"] = {["Hedgehog"] = 47, ["Mole"] = 23.5, ["Frog"] = 21.16, ["Echo Frog"] = 8.35, ["Night Owl"] = 0, ["Raccoon"] = 0},
+    ["Bee Egg"] = {["Bee"] = 65, ["Honey Bee"] = 20, ["Bear Bee"] = 10, ["Petal Bee"] = 5, ["Queen Bee"] = 0},
+    ["Anti Bee Egg"] = {["Wasp"] = 55, ["Tarantula Hawk"] = 31, ["Moth"] = 14, ["Butterfly"] = 0, ["Disco Bee"] = 0},
+    ["Common Summer Egg"] = {["Starfish"] = 50, ["Seafull"] = 25, ["Crab"] = 25},
+    ["Rare Summer Egg"] = {["Flamingo"] = 30, ["Toucan"] = 25, ["Sea Turtle"] = 20, ["Orangutan"] = 15, ["Seal"] = 10},
+    ["Paradise Egg"] = {["Ostrich"] = 43, ["Peacock"] = 33, ["Capybara"] = 24, ["Scarlet Macaw"] = 3, ["Mimic Octopus"] = 1},
+    ["Premium Night Egg"] = {["Hedgehog"] = 50, ["Mole"] = 26, ["Frog"] = 14, ["Echo Frog"] = 10}
+    ["Dinosaur Egg"] = {["Raptor"] = 33, ["Triceratops"] = 33, ["T-Rex"] = 1, ["Stegosaurus"] = 33, ["Pterodactyl"] = 33, ["Brontosaurus"] = 33}
+}
 
-local success, err = pcall(function()
-    local conn = getconnections(replicatedStorage.GameEvents.PetEggService.OnClientEvent)[1]
-    hatchFunction = getupvalue(getupvalue(conn.Function, 1), 2)
-    eggModels = getupvalue(hatchFunction, 1)
-    eggPets = getupvalue(hatchFunction, 2)
+local realESP = {
+    ["Common Egg"] = true, ["Uncommon Egg"] = true, ["Rare Egg"] = true,
+    ["Common Summer Egg"] = true, ["Rare Summer Egg"] = true
+}
+
+local displayedEggs = {}
+local autoStopOn = true
+
+local function weightedRandom(options)
+    local valid = {}
+    for pet, chance in pairs(options) do
+        if chance > 0 then table.insert(valid, {pet = pet, chance = chance}) end
+    end
+    if #valid == 0 then return nil end
+    local total = 0
+    for _, v in ipairs(valid) do total += v.chance end
+    local roll = math.random() * total
+    local cumulative = 0
+    for _, v in ipairs(valid) do
+        cumulative += v.chance
+        if roll <= cumulative then return v.pet end
+    end
+    return valid[1].pet
+end
+
+local function getNonRepeatingRandomPet(eggName, lastPet)
+    local pool = eggChances[eggName]
+    if not pool then return nil end
+    local tries, selectedPet = 0, lastPet
+    while tries < 5 do
+        local pet = weightedRandom(pool)
+        if not pet then return nil end
+        if pet ~= lastPet or math.random() < 0.3 then
+            selectedPet = pet
+            break
+        end
+        tries += 1
+    end
+    return selectedPet
+end
+
+local function createEspGui(object, labelText)
+    local billboard = Instance.new("BillboardGui")
+    billboard.Name = "FakePetESP"
+    billboard.Adornee = object:FindFirstChildWhichIsA("BasePart") or object.PrimaryPart or object
+    billboard.Size = UDim2.new(0, 200, 0, 50)
+    billboard.StudsOffset = Vector3.new(0, 2.5, 0)
+    billboard.AlwaysOnTop = true
+
+    local label = Instance.new("TextLabel")
+    label.Size = UDim2.new(1, 0, 1, 0)
+    label.BackgroundTransparency = 1
+    label.TextColor3 = Color3.new(1, 1, 1)
+    label.TextStrokeTransparency = 0
+    label.TextScaled = true
+    label.Font = Enum.Font.SourceSansBold
+    label.Text = labelText
+    label.Parent = billboard
+
+    billboard.Parent = object
+    return billboard
+end
+
+local function addESP(egg)
+    if egg:GetAttribute("OWNER") ~= localPlayer.Name then return end
+    local eggName = egg:GetAttribute("EggName")
+    local objectId = egg:GetAttribute("OBJECT_UUID")
+    if not eggName or not objectId or displayedEggs[objectId] then return end
+
+    local labelText, firstPet
+    if realESP[eggName] then
+        labelText = eggName
+    else
+        firstPet = getNonRepeatingRandomPet(eggName, nil)
+        labelText = eggName .. " | " .. (firstPet or "?")
+    end
+
+    local espGui = createEspGui(egg, labelText)
+    displayedEggs[objectId] = {
+        egg = egg,
+        gui = espGui,
+        label = espGui:FindFirstChild("TextLabel"),
+        eggName = eggName,
+        lastPet = firstPet
+    }
+end
+
+local function removeESP(egg)
+    local objectId = egg:GetAttribute("OBJECT_UUID")
+    if objectId and displayedEggs[objectId] then
+        displayedEggs[objectId].gui:Destroy()
+        displayedEggs[objectId] = nil
+    end
+end
+
+for _, egg in collectionService:GetTagged("PetEggServer") do
+    addESP(egg)
+end
+
+collectionService:GetInstanceAddedSignal("PetEggServer"):Connect(addESP)
+collectionService:GetInstanceRemovedSignal("PetEggServer"):Connect(removeESP)
+
+local gui = Instance.new("ScreenGui")
+gui.Name = "RandomizerGUI"
+gui.ResetOnSpawn = false
+gui.Parent = localPlayer:WaitForChild("PlayerGui")
+
+local stopBtn = Instance.new("TextButton", gui)
+stopBtn.Size = UDim2.new(0, 150, 0, 40)
+stopBtn.Position = UDim2.new(1, -190, 0, 0)
+stopBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+stopBtn.TextColor3 = Color3.new(1, 1, 1)
+stopBtn.Text = "[A] Auto Stop: ON"
+stopBtn.TextScaled = true
+
+stopBtn.MouseButton1Click:Connect(function()
+    autoStopOn = not autoStopOn
+    stopBtn.Text = autoStopOn and "[A] Auto Stop: ON" or "[A] Auto Stop: OFF"
 end)
 
-if not success then
-    warn("Failed to get hatch function: "..tostring(err))
-    return
-end
+local info = Instance.new("TextButton", gui)
+info.Size = UDim2.new(0, 30, 0, 40)
+info.Position = UDim2.new(1, -35, 0, 0)
+info.BackgroundColor3 = Color3.fromRGB(90, 90, 90)
+info.TextColor3 = Color3.new(1, 1, 1)
+info.Text = "?"
+info.TextScaled = true
 
-local function getObjectFromId(objectId)
-    for _, eggModel in pairs(eggModels) do
-        if eggModel:GetAttribute("OBJECT_UUID") == objectId then
-            return eggModel
-        end
-    end
-    return nil
-end
-
-local function UpdateEsp(objectId, petName)
-    local object = getObjectFromId(objectId)
-    if not object or not espCache[objectId] then return end
-
-    local eggName = object:GetAttribute("EggName")
-    local displayName = petName or "Cannot hatch yet!"
-    espCache[objectId].Text = string.format("%s | %s", eggName, displayName)
-end
-
-local function AddEsp(object)
-    if object:GetAttribute("OWNER") ~= localPlayer.Name then return end
-
-    local eggName = object:GetAttribute("EggName")
-    local petName = eggPets[object:GetAttribute("OBJECT_UUID")]
-    local objectId = object:GetAttribute("OBJECT_UUID")
-    if not objectId then return end
-
-    local label = Drawing.new("Text")
-    label.Text = string.format("%s | %s", eggName, petName or "Cannot hatch yet!")
-    label.Size = 24
-    label.Color = Color3.new(1, 1, 1)
-    label.Outline = true
-    label.OutlineColor = Color3.new(0, 0, 0)
-    label.Center = true
-    label.Visible = false
-
-    espCache[objectId] = label
-    activeEggs[objectId] = object
-end
-
-local function RemoveEsp(object)
-    if object:GetAttribute("OWNER") ~= localPlayer.Name then return end
-
-    local objectId = object:GetAttribute("OBJECT_UUID")
-    if espCache[objectId] then
-        espCache[objectId]:Remove()
-        espCache[objectId] = nil
-    end
-    activeEggs[objectId] = nil
-end
-
-updateAllEsp = function()
-    for objectId, object in pairs(activeEggs) do
-        local petName = eggPets[objectId]
-        UpdateEsp(objectId, petName)
-    end
-end
-
-local function UpdateEspPositions()
-    for objectId, object in pairs(activeEggs) do
-        if not object or not object:IsDescendantOf(workspace) then
-            activeEggs[objectId] = nil
-            if espCache[objectId] then
-                espCache[objectId].Visible = false
-            end
-            continue
-        end
-
-        local label = espCache[objectId]
-        if label then
-            local pos, onScreen = currentCamera:WorldToViewportPoint(object:GetPivot().Position)
-            label.Visible = onScreen
-            if onScreen then
-                label.Position = Vector2.new(pos.X, pos.Y)
-            end
-        end
-    end
-end
-
-local oldFunc
-local success2, err2 = pcall(function()
-    local conn = getconnections(replicatedStorage.GameEvents.EggReadyToHatch_RE.OnClientEvent)[1]
-    oldFunc = hookfunction(conn.Function, function(objectId, petName)
-        UpdateEsp(objectId, petName)
-        return oldFunc(objectId, petName)
+info.MouseButton1Click:Connect(function()
+    pcall(function()
+        game:GetService("StarterGui"):SetCore("SendNotification", {
+            Title = "Info",
+            Text = "Auto Stop when found: Raccoon, Dragonfly, Queen Bee, Red Fox, Disco Bee, Butterfly.",
+            Duration = 5
+        })
     end)
 end)
 
-if not success2 then
-    warn("Failed to hook hatch function: "..tostring(err2))
-end
+local autoBtn = Instance.new("TextButton", gui)
+autoBtn.Size = UDim2.new(0, 150, 0, 40)
+autoBtn.Position = UDim2.new(1, -190, 0, 45)
+autoBtn.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+autoBtn.TextColor3 = Color3.new(1, 1, 1)
+autoBtn.Text = "[B] Reroll Pet Display"
+autoBtn.TextScaled = true
 
-for _, object in pairs(collectionService:GetTagged("PetEggServer")) do
-    task.spawn(AddEsp, object)
-end
-collectionService:GetInstanceAddedSignal("PetEggServer"):Connect(AddEsp)
-collectionService:GetInstanceRemovedSignal("PetEggServer"):Connect(RemoveEsp)
-runService.PreRender:Connect(UpdateEspPositions)
+autoBtn.MouseButton1Click:Connect(function()
+    for objectId, data in pairs(displayedEggs) do
+        local pet = getNonRepeatingRandomPet(data.eggName, data.lastPet)
+        if pet and data.label then
+            data.label.Text = data.eggName .. " | " .. pet
+            data.lastPet = pet
+        end
+    end
+end)
