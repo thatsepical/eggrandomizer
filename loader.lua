@@ -147,7 +147,6 @@ UIS.InputChanged:Connect(function(input)
     end
 end)
 
--- Header with exact same style as AdvancedSpawnerUI
 local header = Instance.new("Frame")
 header.Name = "Header"
 header.Size = UDim2.new(1, 0, 0, 40)
@@ -189,7 +188,6 @@ credit.BackgroundTransparency = 1
 credit.TextXAlignment = Enum.TextXAlignment.Center
 credit.Parent = header
 
--- Tab background (like AdvancedSpawnerUI but adjusted for small size)
 local tabBackground = Instance.new("Frame")
 tabBackground.Size = UDim2.new(1, 0, 0, 20)
 tabBackground.Position = UDim2.new(0, 0, 0, 35)
@@ -210,25 +208,26 @@ closeBtn.BorderSizePixel = 0
 closeBtn.Parent = header
 
 local contentFrame = Instance.new("Frame")
-contentFrame.Position = UDim2.new(0, 0, 0, 55) -- Adjusted for tab background
+contentFrame.Position = UDim2.new(0, 0, 0, 55)
 contentFrame.Size = UDim2.new(1, 0, 1, -55)
 contentFrame.BackgroundTransparency = 1
 contentFrame.Parent = mainFrame
 
--- Centered Predict button
+-- Centered Predict button (moved lower)
 local predict = Instance.new("TextButton", contentFrame)
-predict.Size = UDim2.new(0.8, 0, 0, 25)
-predict.Position = UDim2.new(0.1, 0, 0.1, 0)
+predict.Size = UDim2.new(0.8, 0, 0, 30)  -- Made slightly taller
+predict.Position = UDim2.new(0.1, 0, 0.3, 0)  -- Moved lower
 predict.BackgroundColor3 = lavender
 predict.TextColor3 = Color3.new(0, 0, 0)
 predict.Font = Enum.Font.SourceSans
-predict.TextSize = 12
+predict.TextSize = 14  -- Slightly larger text
 predict.Text = "PREDICT PETS"
 Instance.new("UICorner", predict).CornerRadius = UDim.new(0, 6)
 
+-- Loading bar (bigger and in same position as button)
 local loadingBarBg = Instance.new("Frame", contentFrame)
-loadingBarBg.Size = UDim2.new(0.8, 0, 0, 15)
-loadingBarBg.Position = UDim2.new(0.1, 0, 0.1, 0)
+loadingBarBg.Size = UDim2.new(0.8, 0, 0, 25)  -- Bigger height
+loadingBarBg.Position = UDim2.new(0.1, 0, 0.3, 0)  -- Same position as button
 loadingBarBg.BackgroundColor3 = Color3.fromRGB(50, 50, 55)
 loadingBarBg.BorderSizePixel = 0
 loadingBarBg.Visible = false
@@ -244,14 +243,14 @@ loadingPercent.BackgroundTransparency = 1
 loadingPercent.Text = "0%"
 loadingPercent.TextColor3 = Color3.new(1, 1, 1)
 loadingPercent.Font = Enum.Font.SourceSansBold
-loadingPercent.TextSize = 10
+loadingPercent.TextSize = 14  -- Bigger text
 loadingPercent.TextStrokeTransparency = 0.5
 
 local loadingText = Instance.new("TextLabel", contentFrame)
 loadingText.Size = UDim2.new(0.9, 0, 0, 30)
-loadingText.Position = UDim2.new(0.05, 0, 0.3, 0)
+loadingText.Position = UDim2.new(0.05, 0, 0.6, 0)  -- Adjusted position
 loadingText.Font = Enum.Font.SourceSans
-loadingText.TextSize = 10
+loadingText.TextSize = 12
 loadingText.TextColor3 = textColor
 loadingText.BackgroundTransparency = 1
 loadingText.TextXAlignment = Enum.TextXAlignment.Left
