@@ -98,20 +98,20 @@ frame.Draggable = true
 Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 8)
 
 local title = Instance.new("TextLabel", frame)
-title.Size = UDim2.new(1, -30, 0, 20)
-title.Position = UDim2.new(0, 10, 0, 5)
+title.Size = UDim2.new(1, -10, 0, 20)
+title.Position = UDim2.new(0, 5, 0, 5)
 title.BackgroundTransparency = 1
 title.Text = "EGG RANDOMIZER"
-title.TextColor3 = Color3.fromRGB(255, 255, 255)
+title.TextColor3 = Color3.fromRGB(220, 220, 220)
 title.Font = Enum.Font.SourceSansBold
 title.TextSize = 16
-title.TextXAlignment = Enum.TextXAlignment.Left
+title.TextXAlignment = Enum.TextXAlignment.Center
 
 local close = Instance.new("TextButton", frame)
 close.Size = UDim2.new(0, 20, 0, 20)
 close.Position = UDim2.new(1, -25, 0, 5)
 close.Text = "X"
-close.TextColor3 = Color3.new(1, 1, 1)
+close.TextColor3 = Color3.fromRGB(220, 220, 220)
 close.BackgroundTransparency = 1
 close.Font = Enum.Font.SourceSansBold
 close.TextSize = 14
