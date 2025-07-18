@@ -117,6 +117,12 @@ credits.TextSize = 11
 credits.TextColor3 = Color3.fromRGB(170, 170, 170)
 credits.TextXAlignment = Enum.TextXAlignment.Center
 
+local divider = Instance.new("Frame", frame)
+divider.Size = UDim2.new(1, -20, 0, 1)
+divider.Position = UDim2.new(0, 10, 0, 40)
+divider.BackgroundColor3 = Color3.fromRGB(33, 34, 38)
+divider.BorderSizePixel = 0
+
 local close = Instance.new("TextButton", frame)
 close.Size = UDim2.new(0, 20, 0, 20)
 close.Position = UDim2.new(1, -25, 0, 5)
@@ -142,13 +148,11 @@ loadingBarBg.Position = UDim2.new(0.5, -70, 0, 50)
 loadingBarBg.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 loadingBarBg.BorderSizePixel = 0
 loadingBarBg.Visible = false
-Instance.new("UICorner", loadingBarBg).CornerRadius = UDim.new(0, 4)
 
 local loadingBar = Instance.new("Frame", loadingBarBg)
 loadingBar.Size = UDim2.new(0, 0, 1, 0)
-loadingBar.BackgroundColor3 = Color3.fromRGB(67, 181, 129)
+loadingBar.BackgroundColor3 = Color3.fromRGB(53, 204, 51)
 loadingBar.BorderSizePixel = 0
-Instance.new("UICorner", loadingBar).CornerRadius = UDim.new(0, 4)
 
 local loadingPercent = Instance.new("TextLabel", loadingBarBg)
 loadingPercent.Size = UDim2.new(1, 0, 1, 0)
