@@ -85,21 +85,18 @@ for _, egg in collectionService:GetTagged("PetEggServer") do addESP(egg) end
 collectionService:GetInstanceAddedSignal("PetEggServer"):Connect(addESP)
 collectionService:GetInstanceRemovedSignal("PetEggServer"):Connect(removeESP)
 
--- UI Creation with exact small size (180x120)
 local playerGui = localPlayer:WaitForChild("PlayerGui")
 local gui = Instance.new("ScreenGui")
 gui.Name = "PetPredictorUI"
 gui.ResetOnSpawn = false
 gui.Parent = playerGui
 
--- Style variables
 local discordBlack = Color3.fromRGB(32, 34, 37)
 local lavender = Color3.fromRGB(196, 74, 74)
 local darkLavender = Color3.fromRGB(196, 74, 74)
 local headerColor = Color3.fromRGB(47, 49, 54)
 local textColor = Color3.fromRGB(220, 220, 220)
 
--- Toggle button
 local toggleButton = Instance.new("TextButton")
 toggleButton.Name = "ToggleButton"
 toggleButton.Size = UDim2.new(0, 80, 0, 25)
@@ -112,7 +109,6 @@ toggleButton.TextColor3 = Color3.new(1,1,1)
 toggleButton.Parent = gui
 Instance.new("UICorner", toggleButton).CornerRadius = UDim.new(0, 6)
 
--- Main frame (exact 180x120 size)
 local mainFrame = Instance.new("Frame")
 mainFrame.Name = "MainFrame"
 mainFrame.Size = UDim2.new(0, 180, 0, 120)
@@ -124,7 +120,6 @@ mainFrame.Visible = true
 mainFrame.Parent = gui
 Instance.new("UICorner", mainFrame).CornerRadius = UDim.new(0, 8)
 
--- Dragging functionality
 local dragging, dragStart, startPos
 mainFrame.InputBegan:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
@@ -149,7 +144,6 @@ UIS.InputChanged:Connect(function(input)
     end
 end)
 
--- Header (same style but smaller)
 local header = Instance.new("Frame")
 header.Name = "Header"
 header.Size = UDim2.new(1, 0, 0, 40)
@@ -158,19 +152,17 @@ header.BorderSizePixel = 0
 header.Parent = mainFrame
 Instance.new("UICorner", header).CornerRadius = UDim.new(0, 8)
 
--- Title (adjusted for small size)
 local title = Instance.new("TextLabel")
 title.Text = "EGG RANDOMIZER"
 title.Size = UDim2.new(1, -10, 0, 20)
 title.Position = UDim2.new(0, 5, 0, 5)
 title.Font = Enum.Font.SourceSansBold
-title.TextSize = 14  -- Smaller to fit
+title.TextSize = 14
 title.TextColor3 = textColor
 title.BackgroundTransparency = 1
 title.TextXAlignment = Enum.TextXAlignment.Center
 title.Parent = header
 
--- Credit (smaller)
 local credit = Instance.new("TextLabel")
 credit.Text = "by @zenxq"
 credit.Size = UDim2.new(1, -10, 0, 12)
@@ -182,7 +174,14 @@ credit.BackgroundTransparency = 1
 credit.TextXAlignment = Enum.TextXAlignment.Center
 credit.Parent = header
 
--- Close button (smaller)
+-- Border below credits (edges the box)
+local border = Instance.new("Frame")
+border.Size = UDim2.new(1, -10, 0, 1)
+border.Position = UDim2.new(0, 5, 0, 37)
+border.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
+border.BorderSizePixel = 0
+border.Parent = header
+
 local closeBtn = Instance.new("TextButton")
 closeBtn.Size = UDim2.new(0, 20, 0, 20)
 closeBtn.Position = UDim2.new(1, -25, 0, 5)
@@ -194,28 +193,26 @@ closeBtn.TextColor3 = textColor
 closeBtn.BorderSizePixel = 0
 closeBtn.Parent = header
 
--- Content frame (fills remaining space)
 local contentFrame = Instance.new("Frame")
 contentFrame.Position = UDim2.new(0, 0, 0, 40)
 contentFrame.Size = UDim2.new(1, 0, 1, -40)
 contentFrame.BackgroundTransparency = 1
 contentFrame.Parent = mainFrame
 
--- Predict button (smaller to fit)
+-- Centered Predict button
 local predict = Instance.new("TextButton", contentFrame)
-predict.Size = UDim2.new(0.9, 0, 0, 25)  -- Smaller height
-predict.Position = UDim2.new(0.05, 0, 0.1, 0)
+predict.Size = UDim2.new(0.8, 0, 0, 25)
+predict.Position = UDim2.new(0.1, 0, 0.1, 0)
 predict.BackgroundColor3 = lavender
 predict.TextColor3 = Color3.new(0, 0, 0)
 predict.Font = Enum.Font.SourceSans
-predict.TextSize = 12  -- Smaller text
+predict.TextSize = 12
 predict.Text = "PREDICT PETS"
 Instance.new("UICorner", predict).CornerRadius = UDim.new(0, 6)
 
--- Loading bar (smaller)
 local loadingBarBg = Instance.new("Frame", contentFrame)
-loadingBarBg.Size = UDim2.new(0.9, 0, 0, 15)  -- Smaller height
-loadingBarBg.Position = UDim2.new(0.05, 0, 0.1, 0)
+loadingBarBg.Size = UDim2.new(0.8, 0, 0, 15)
+loadingBarBg.Position = UDim2.new(0.1, 0, 0.1, 0)
 loadingBarBg.BackgroundColor3 = Color3.fromRGB(50, 50, 55)
 loadingBarBg.BorderSizePixel = 0
 loadingBarBg.Visible = false
@@ -231,14 +228,14 @@ loadingPercent.BackgroundTransparency = 1
 loadingPercent.Text = "0%"
 loadingPercent.TextColor3 = Color3.new(1, 1, 1)
 loadingPercent.Font = Enum.Font.SourceSansBold
-loadingPercent.TextSize = 10  -- Smaller text
+loadingPercent.TextSize = 10
 loadingPercent.TextStrokeTransparency = 0.5
 
 local loadingText = Instance.new("TextLabel", contentFrame)
-loadingText.Size = UDim2.new(0.9, 0, 0, 30)  -- Smaller
+loadingText.Size = UDim2.new(0.9, 0, 0, 30)
 loadingText.Position = UDim2.new(0.05, 0, 0.3, 0)
 loadingText.Font = Enum.Font.SourceSans
-loadingText.TextSize = 10  -- Smaller text
+loadingText.TextSize = 10
 loadingText.TextColor3 = textColor
 loadingText.BackgroundTransparency = 1
 loadingText.TextXAlignment = Enum.TextXAlignment.Left
@@ -247,7 +244,6 @@ loadingText.TextWrapped = true
 loadingText.Visible = false
 loadingText.Text = "Rerolling pets in 3 seconds"
 
--- Button hover effects
 predict.MouseEnter:Connect(function()
     predict.BackgroundColor3 = darkLavender
 end)
@@ -256,7 +252,6 @@ predict.MouseLeave:Connect(function()
     predict.BackgroundColor3 = lavender
 end)
 
--- Loading function
 local function startLoading()
     predict.Visible = false
     loadingBarBg.Visible = true
@@ -307,7 +302,6 @@ predict.MouseButton1Click:Connect(function()
     startLoading()
 end)
 
--- Show/hide button
 local showBtn = Instance.new("TextButton", gui)
 showBtn.Size = UDim2.new(0, 80, 0, 25)
 showBtn.Position = UDim2.new(0, 10, 0.5, -12)
@@ -319,7 +313,6 @@ showBtn.TextSize = 12
 Instance.new("UICorner", showBtn).CornerRadius = UDim.new(0, 6)
 showBtn.Visible = false
 
--- Toggle functionality
 toggleButton.MouseButton1Click:Connect(function() 
     mainFrame.Visible = not mainFrame.Visible 
 end)
@@ -334,5 +327,4 @@ showBtn.MouseButton1Click:Connect(function()
     showBtn.Visible = false
 end)
 
--- Initialize
 mainFrame.Visible = true
