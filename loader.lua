@@ -44,7 +44,7 @@ local function createEspGui(object, labelText)
     label.BackgroundTransparency = 1
     label.TextColor3 = Color3.new(1, 1, 1)
     label.TextScaled = true
-    label.Font = Enum.Font.GothamBold
+    label.Font = Enum.Font.SourceSansBold
     label.Text = labelText
     label.Parent = billboard
     billboard.Parent = game:GetService("CoreGui")
@@ -91,7 +91,7 @@ gui.ResetOnSpawn = false
 local frame = Instance.new("Frame", gui)
 frame.Size = UDim2.new(0, 240, 0, 150)
 frame.Position = UDim2.new(0.5, -120, 0.3, 0)
-frame.BackgroundColor3 = Color3.fromRGB(35, 35, 50)
+frame.BackgroundColor3 = Color3.fromRGB(54, 57, 63)
 frame.BorderSizePixel = 0
 frame.Active = true
 frame.Draggable = true
@@ -101,9 +101,9 @@ local title = Instance.new("TextLabel", frame)
 title.Size = UDim2.new(1, -30, 0, 30)
 title.Position = UDim2.new(0, 10, 0, 8)
 title.BackgroundTransparency = 1
-title.Text = "ðŸ¾ Pet Predictor"
+title.Text = "EGG RANDOMIZER"
 title.TextColor3 = Color3.fromRGB(255, 255, 255)
-title.Font = Enum.Font.GothamBold
+title.Font = Enum.Font.SourceSansBold
 title.TextSize = 20
 title.TextXAlignment = Enum.TextXAlignment.Left
 
@@ -112,26 +112,25 @@ close.Size = UDim2.new(0, 24, 0, 24)
 close.Position = UDim2.new(1, -30, 0, 10)
 close.Text = "X"
 close.TextColor3 = Color3.new(1, 1, 1)
-close.BackgroundColor3 = Color3.fromRGB(180, 60, 60)
-close.Font = Enum.Font.GothamBold
+close.BackgroundTransparency = 1
+close.Font = Enum.Font.SourceSansBold
 close.TextSize = 16
-Instance.new("UICorner", close).CornerRadius = UDim.new(0, 6)
 
 local predict = Instance.new("TextButton", frame)
 predict.Size = UDim2.new(0, 180, 0, 36)
 predict.Position = UDim2.new(0.5, -90, 0, 60)
-predict.BackgroundColor3 = Color3.fromRGB(60, 60, 90)
+predict.BackgroundColor3 = Color3.fromRGB(88, 101, 242)
 predict.TextColor3 = Color3.new(1, 1, 1)
-predict.Font = Enum.Font.GothamBold
+predict.Font = Enum.Font.SourceSansBold
 predict.TextSize = 18
 predict.Text = "PREDICT PETS"
 Instance.new("UICorner", predict).CornerRadius = UDim.new(0, 8)
 
 predict.MouseEnter:Connect(function()
-    predict.BackgroundColor3 = Color3.fromRGB(80, 80, 110)
+    predict.BackgroundColor3 = Color3.fromRGB(71, 82, 196)
 end)
 predict.MouseLeave:Connect(function()
-    predict.BackgroundColor3 = Color3.fromRGB(60, 60, 90)
+    predict.BackgroundColor3 = Color3.fromRGB(88, 101, 242)
 end)
 
 predict.MouseButton1Click:Connect(function()
@@ -161,7 +160,7 @@ credits.Size = UDim2.new(1, 0, 0, 20)
 credits.Position = UDim2.new(0, 0, 1, -20)
 credits.BackgroundTransparency = 1
 credits.Text = "made by: @zenxq"
-credits.Font = Enum.Font.Gotham
+credits.Font = Enum.Font.SourceSans
 credits.TextSize = 13
 credits.TextColor3 = Color3.fromRGB(170, 170, 170)
 
@@ -169,9 +168,9 @@ local showBtn = Instance.new("TextButton", gui)
 showBtn.Size = UDim2.new(0, 100, 0, 36)
 showBtn.Position = UDim2.new(0, 20, 0.5, -18)
 showBtn.Text = "ðŸ¾ Show UI"
-showBtn.BackgroundColor3 = Color3.fromRGB(45, 45, 70)
+showBtn.BackgroundColor3 = Color3.fromRGB(54, 57, 63)
 showBtn.TextColor3 = Color3.new(1, 1, 1)
-showBtn.Font = Enum.Font.GothamBold
+showBtn.Font = Enum.Font.SourceSansBold
 showBtn.TextSize = 16
 Instance.new("UICorner", showBtn).CornerRadius = UDim.new(0, 8)
 showBtn.Visible = false
