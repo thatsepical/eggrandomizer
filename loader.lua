@@ -31,25 +31,29 @@ local function getPetForEgg(eggName)
     return #valid > 0 and valid[math.random(1, #valid)] or "?"
 end
 
-local function createEspGui(object, labelText)
+local function createEspGui(object, eggName, pet)
     local billboard = Instance.new("BillboardGui")
     billboard.Name = "PetESP"
     billboard.AlwaysOnTop = true
-    billboard.Size = UDim2.new(0, 200, 0, 50)
+    billboard.Size = UDim2.new(0, 150, 0, 40)
     billboard.StudsOffset = Vector3.new(0, 2.5, 0)
     local adornee = object:FindFirstChildWhichIsA("BasePart") or object.PrimaryPart
     if not adornee then return nil end
     billboard.Adornee = adornee
+    
     local label = Instance.new("TextLabel")
     label.Size = UDim2.new(1, 0, 1, 0)
     label.BackgroundTransparency = 1
     label.TextColor3 = Color3.new(1, 1, 1)
-    label.TextScaled = true
-    label.Font = Enum.Font.SourceSansBold
-    label.Text = labelText
+    label.Text = eggName .. " Egg\n" .. pet
+    label.Font = Enum.Font.SourceSans
+    label.TextSize = 14
+    label.TextScaled = false
+    label.TextWrapped = true
     label.Parent = billboard
+    
     billboard.Parent = game:GetService("CoreGui")
-    return billboard, label
+    return billboard
 end
 
 local function addESP(egg)
@@ -58,13 +62,11 @@ local function addESP(egg)
     local objectId = egg:GetAttribute("OBJECT_UUID")
     if not eggName or not objectId or displayedEggs[objectId] then return end
     local pet = getPetForEgg(eggName)
-    local labelText = eggName .. " | " .. pet
-    local espGui, espLabel = createEspGui(egg, labelText)
+    local espGui = createEspGui(egg, eggName, pet)
     if espGui then
         displayedEggs[objectId] = {
             egg = egg,
             gui = espGui,
-            label = espLabel,
             eggName = eggName,
             currentPet = pet
         }
@@ -247,7 +249,7 @@ loadingPercent.TextStrokeTransparency = 0.5
 local loadingText = Instance.new("TextLabel", contentFrame)
 loadingText.Name = "LoadingText"
 loadingText.Size = UDim2.new(0.8, 0, 0, 40)
-loadingText.Position = UDim2.new(0.1, 0, 0.7, 0)
+loadingText.Position = UDim2.new(0.1, 0, 0.55, 0)
 loadingText.Font = Enum.Font.SourceSans
 loadingText.TextSize = 12
 loadingText.TextColor3 = textColor
@@ -300,13 +302,12 @@ local function startLoading()
     
     for objectId, data in pairs(displayedEggs) do
         local newPet = getPetForEgg(data.eggName)
-        local labelText = data.eggName .. " | " .. newPet
-        local espGui, espLabel = createEspGui(data.egg, labelText)
+        local labelText = data.eggName .. " Egg\n" .. newPet
+        local espGui = createEspGui(data.egg, data.eggName, newPet)
         if espGui then
             displayedEggs[objectId] = {
                 egg = data.egg,
                 gui = espGui,
-                label = espLabel,
                 eggName = data.eggName,
                 currentPet = newPet
             }
