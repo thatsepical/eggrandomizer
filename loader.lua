@@ -118,8 +118,8 @@ credits.TextColor3 = Color3.fromRGB(170, 170, 170)
 credits.TextXAlignment = Enum.TextXAlignment.Center
 
 local divider = Instance.new("Frame", frame)
-divider.Size = UDim2.new(1, -20, 0, 1)
-divider.Position = UDim2.new(0, 10, 0, 40)
+divider.Size = UDim2.new(1, 0, 0, 1)
+divider.Position = UDim2.new(0, 0, 0, 40)
 divider.BackgroundColor3 = Color3.fromRGB(33, 34, 38)
 divider.BorderSizePixel = 0
 
